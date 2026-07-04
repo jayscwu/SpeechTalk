@@ -21,6 +21,8 @@
       --accent-soft: #faead9;
       --gray-soft: #f1eee7;
       --shadow: 0 16px 38px rgba(75, 61, 35, 0.12);
+      --cat-color: var(--brand);
+      --cat-soft: var(--brand-soft);
     }
 
     * {
@@ -35,61 +37,86 @@
       line-height: 1.6;
     }
 
+    body.login-locked {
+      overflow: hidden;
+    }
+
+    body.login-locked main {
+      display: none;
+    }
+
     button,
     input,
     select {
       font: inherit;
     }
 
-    .topbar {
-      background: #fffdf8;
-      border-bottom: 1px solid var(--line);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+    .login-screen {
+      align-items: center;
+      background:
+        radial-gradient(circle at top left, rgba(47, 118, 95, 0.18), transparent 34%),
+        linear-gradient(135deg, #f7f3ea 0%, #edf4ec 100%);
+      display: none;
+      min-height: 100svh;
+      padding: 24px;
     }
 
-    .topbar-inner {
-      align-items: center;
-      display: flex;
-      gap: 16px;
-      justify-content: space-between;
+    body.login-locked .login-screen {
+      display: grid;
+    }
+
+    .login-card {
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
       margin: 0 auto;
-      max-width: 1180px;
-      padding: 14px 20px;
+      max-width: 420px;
+      padding: 28px;
+      width: 100%;
     }
 
-    .brand {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .brand-mark {
+    .login-mark {
       align-items: center;
       background: var(--brand);
       border-radius: 8px;
       color: white;
       display: inline-flex;
-      font-weight: 800;
-      height: 36px;
+      font-size: 22px;
+      font-weight: 900;
+      height: 46px;
       justify-content: center;
-      width: 36px;
+      margin-bottom: 18px;
+      width: 46px;
     }
 
-    .brand-title {
-      font-size: 18px;
-      font-weight: 800;
-      white-space: nowrap;
+    .login-card h1 {
+      font-size: 28px;
+      line-height: 1.2;
+      margin: 0 0 8px;
     }
 
-    .source-note {
+    .login-card p {
       color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .login-error {
+      color: #9d3128;
       font-size: 14px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-weight: 800;
+      min-height: 20px;
+    }
+
+    .login-hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 14px;
     }
 
     main {
@@ -103,7 +130,7 @@
       display: flex;
       gap: 18px;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .hero-copy h1 {
@@ -117,6 +144,13 @@
       font-size: 16px;
       margin: 0;
       max-width: 720px;
+    }
+
+    .hero-tools {
+      align-items: flex-end;
+      display: grid;
+      gap: 10px;
+      justify-items: end;
     }
 
     .stats {
@@ -155,9 +189,12 @@
       box-shadow: var(--shadow);
       display: grid;
       gap: 12px;
-      grid-template-columns: minmax(280px, 1.6fr) repeat(3, minmax(132px, 0.55fr)) auto;
+      grid-template-columns: minmax(280px, 1.5fr) repeat(3, minmax(128px, 0.5fr)) auto;
       margin-bottom: 14px;
       padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 8;
     }
 
     .field {
@@ -196,6 +233,7 @@
       display: flex;
       gap: 8px;
       justify-content: flex-end;
+      white-space: nowrap;
     }
 
     button {
@@ -218,14 +256,25 @@
     }
 
     .ghost {
-      background: var(--gray-soft);
+      background: #ffffff;
+      border: 1px solid var(--line);
       color: var(--muted);
+    }
+
+    .logout-button {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      min-height: 36px;
+      padding: 7px 11px;
+      white-space: nowrap;
     }
 
     .layout {
       display: grid;
       gap: 14px;
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+      align-items: start;
     }
 
     .category-panel,
@@ -238,6 +287,8 @@
 
     .category-panel {
       overflow: hidden;
+      position: sticky;
+      top: 96px;
     }
 
     .category-panel h2,
@@ -256,16 +307,27 @@
       padding: 14px 16px;
     }
 
+    .category-head {
+      background: transparent;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      color: var(--ink);
+      min-height: 0;
+      text-align: left;
+      width: 100%;
+    }
+
     .category-list {
       display: grid;
       gap: 8px;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       padding: 10px;
     }
 
     .category-button {
       background: #ffffff;
       border: 1px solid var(--line);
+      border-left: 5px solid var(--cat-color);
       border-radius: 8px;
       color: var(--ink);
       display: grid;
@@ -279,14 +341,15 @@
     }
 
     .category-button:hover {
-      border-color: rgba(47, 118, 95, 0.35);
+      background: var(--cat-soft);
+      border-color: var(--cat-color);
       box-shadow: 0 8px 18px rgba(75, 61, 35, 0.08);
       transform: translateY(-1px);
     }
 
     .category-button.active {
-      background: var(--brand);
-      border-color: var(--brand);
+      background: var(--cat-color);
+      border-color: var(--cat-color);
       color: white;
     }
 
@@ -324,7 +387,7 @@
     .topic-card {
       background: #ffffff;
       border: 1px solid var(--line);
-      border-left: 4px solid var(--brand);
+      border-left: 4px solid var(--cat-color);
       border-radius: 8px;
       display: grid;
       gap: 8px;
@@ -334,7 +397,7 @@
     }
 
     .topic-card:hover {
-      border-color: rgba(47, 118, 95, 0.36);
+      border-color: var(--cat-color);
       box-shadow: 0 10px 22px rgba(75, 61, 35, 0.08);
       transform: translateY(-1px);
     }
@@ -375,8 +438,68 @@
     }
 
     .tag.category {
-      background: var(--brand-soft);
-      color: var(--brand-dark);
+      background: var(--cat-soft);
+      color: var(--cat-color);
+    }
+
+    .cat-01 {
+      --cat-color: #2f765f;
+      --cat-soft: #dceee6;
+    }
+
+    .cat-02 {
+      --cat-color: #2f6f9f;
+      --cat-soft: #e1eef8;
+    }
+
+    .cat-03 {
+      --cat-color: #b45f3c;
+      --cat-soft: #f7e5dc;
+    }
+
+    .cat-04 {
+      --cat-color: #8b63b8;
+      --cat-soft: #eee5f7;
+    }
+
+    .cat-05 {
+      --cat-color: #c06d8b;
+      --cat-soft: #f8e4ec;
+    }
+
+    .cat-06 {
+      --cat-color: #4f8b3a;
+      --cat-soft: #e4f1df;
+    }
+
+    .cat-07 {
+      --cat-color: #4e6bc0;
+      --cat-soft: #e5eafb;
+    }
+
+    .cat-08 {
+      --cat-color: #c98224;
+      --cat-soft: #faecd7;
+    }
+
+    .cat-09 {
+      --cat-color: #7a6f2e;
+      --cat-soft: #eeeacc;
+    }
+
+    .cat-10 {
+      --cat-color: #32818b;
+      --cat-soft: #dff1f2;
+    }
+
+    .cat-11 {
+      --cat-color: #9c4b9d;
+      --cat-soft: #f1e1f2;
+    }
+
+    .cat-12 {
+      --cat-color: #60733c;
+      --cat-soft: #e7eddc;
     }
 
     .empty,
@@ -412,9 +535,22 @@
         grid-template-columns: 1fr;
       }
 
+      .controls {
+        position: static;
+      }
+
       .hero {
         align-items: flex-start;
         flex-direction: column;
+      }
+
+      .hero-tools {
+        justify-items: stretch;
+        width: 100%;
+      }
+
+      .logout-button {
+        justify-self: end;
       }
 
       .stats {
@@ -427,6 +563,10 @@
         flex: 1 1 140px;
       }
 
+      .category-panel {
+        position: static;
+      }
+
       .actions {
         justify-content: stretch;
       }
@@ -437,13 +577,27 @@
     }
 
     @media (max-width: 560px) {
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
+      .login-screen {
+        align-items: start;
+        padding: 16px;
       }
 
-      .source-note {
-        white-space: normal;
+      .login-card {
+        margin-top: 8vh;
+        padding: 22px;
+      }
+
+      .login-card h1 {
+        font-size: 24px;
+      }
+
+      .hero {
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .hero-copy p {
+        font-size: 14px;
       }
 
       .stats {
@@ -451,30 +605,96 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .logout-button {
+        width: 100%;
+      }
+
+      .stat {
+        min-width: 0;
+        padding: 7px 9px;
+      }
+
+      .stat strong {
+        font-size: 17px;
+      }
+
       main {
-        padding: 18px 12px 34px;
+        padding: 14px 10px 28px;
+      }
+
+      .controls {
+        gap: 10px;
+        padding: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 8;
+      }
+
+      input,
+      select,
+      button {
+        min-height: 46px;
       }
 
       .hero-copy h1 {
-        font-size: 28px;
+        font-size: 24px;
+      }
+
+      .category-head,
+      .results-head {
+        padding: 12px;
+      }
+
+      .category-head {
+        cursor: pointer;
+      }
+
+      .category-list {
+        display: none;
+        grid-template-columns: 1fr;
+        padding: 10px 12px 12px;
+      }
+
+      .category-panel.open .category-list {
+        display: grid;
       }
 
       .topic-card {
         grid-template-columns: 1fr;
+        padding: 11px 12px;
+      }
+
+      .topic-title {
+        font-size: 17px;
+      }
+
+      .topic-meta {
+        gap: 6px;
+      }
+
+      .tag {
+        font-size: 12px;
       }
     }
   </style>
 </head>
-<body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <span class="brand-mark">講</span>
-        <span class="brand-title">國小演講題目查詢</span>
-      </div>
-      <div class="source-note">資料來源：已由 分類項目.md、國小演講題目分類.md 內嵌成靜態資料</div>
+<body class="login-locked">
+  <section class="login-screen" aria-labelledby="login-title">
+    <div class="login-card">
+      <div class="login-mark">講</div>
+      <h1 id="login-title">國小演講題目查詢</h1>
+      <p>請輸入班級共用密碼後開始查詢題目。</p>
+      <form class="login-form" id="loginForm">
+        <div class="field">
+          <label for="loginPassword">密碼</label>
+          <input id="loginPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="請輸入密碼">
+        </div>
+        <button class="primary" type="submit">進入查詢</button>
+        <div class="login-error" id="loginError" aria-live="polite"></div>
+      </form>
+      <div class="login-hint">請向老師索取班級共用密碼。</div>
     </div>
-  </header>
+  </section>
 
   <main>
     <section class="hero" aria-labelledby="page-title">
@@ -482,22 +702,25 @@
         <h1 id="page-title">幫學生找到剛剛好的練習題目</h1>
         <p>用年度、階段、分類和關鍵字快速篩選演講題目，也可以隨機抽題，適合課堂暖身、回家練習或賽前準備。</p>
       </div>
-      <div class="stats" aria-label="資料統計">
-        <div class="stat">
-          <strong id="totalTopics">0</strong>
-          <span>題演講題目</span>
-        </div>
-        <div class="stat">
-          <strong id="visibleTopics">0</strong>
-          <span>目前符合條件</span>
-        </div>
-        <div class="stat">
-          <strong id="yearCount">0</strong>
-          <span>個年度</span>
-        </div>
-        <div class="stat">
-          <strong id="categoryCount">0</strong>
-          <span>個主題分類</span>
+      <div class="hero-tools">
+        <button class="logout-button" id="logoutButton" type="button">登出</button>
+        <div class="stats" aria-label="資料統計">
+          <div class="stat">
+            <strong id="totalTopics">0</strong>
+            <span>題演講題目</span>
+          </div>
+          <div class="stat">
+            <strong id="visibleTopics">0</strong>
+            <span>目前符合條件</span>
+          </div>
+          <div class="stat">
+            <strong id="yearCount">0</strong>
+            <span>個年度</span>
+          </div>
+          <div class="stat">
+            <strong id="categoryCount">0</strong>
+            <span>個主題分類</span>
+          </div>
         </div>
       </div>
     </section>
@@ -520,17 +743,18 @@
         <select id="categoryFilter"></select>
       </div>
       <div class="actions">
-        <button class="ghost" id="resetButton" type="button">清除</button>
+        <button class="primary" id="searchButton" type="button">開始篩選</button>
         <button class="primary" id="randomButton" type="button">隨機抽題</button>
+        <button class="ghost" id="resetButton" type="button">清除條件</button>
       </div>
     </section>
 
     <section class="layout">
       <aside class="category-panel" aria-label="主題分類列表">
-        <div class="category-head">
+        <button class="category-head" id="categoryToggle" type="button" aria-expanded="false" aria-controls="categoryList">
           <h2>主題分類</h2>
           <span class="count-pill" id="categorySummary">0 類</span>
-        </div>
+        </button>
         <div class="category-list" id="categoryList"></div>
       </aside>
 
@@ -562,11 +786,21 @@
       category: "all"
     };
 
+    const LOGIN_PASSWORD = "0000";
+    const AUTH_KEY = "speechTalkUnlocked";
+
     const els = {
+      loginForm: document.querySelector("#loginForm"),
+      loginPassword: document.querySelector("#loginPassword"),
+      loginError: document.querySelector("#loginError"),
+      logoutButton: document.querySelector("#logoutButton"),
       keyword: document.querySelector("#keyword"),
+      searchButton: document.querySelector("#searchButton"),
       yearFilter: document.querySelector("#yearFilter"),
       stageFilter: document.querySelector("#stageFilter"),
       categoryFilter: document.querySelector("#categoryFilter"),
+      categoryPanel: document.querySelector(".category-panel"),
+      categoryToggle: document.querySelector("#categoryToggle"),
       resetButton: document.querySelector("#resetButton"),
       randomButton: document.querySelector("#randomButton"),
       categoryList: document.querySelector("#categoryList"),
@@ -576,8 +810,65 @@
       yearCount: document.querySelector("#yearCount"),
       categoryCount: document.querySelector("#categoryCount"),
       categorySummary: document.querySelector("#categorySummary"),
+      resultsTitle: document.querySelector(".results-head h2"),
       resultSummary: document.querySelector("#resultSummary")
     };
+
+    function readAuthState() {
+      try {
+        return sessionStorage.getItem(AUTH_KEY) === "true";
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function writeAuthState(value) {
+      try {
+        if (value) {
+          sessionStorage.setItem(AUTH_KEY, "true");
+        } else {
+          sessionStorage.removeItem(AUTH_KEY);
+        }
+      } catch (error) {
+        // The page still works if browser storage is unavailable.
+      }
+    }
+
+    function unlockApp() {
+      document.body.classList.remove("login-locked");
+      els.loginError.textContent = "";
+      els.loginPassword.value = "";
+    }
+
+    function lockApp() {
+      document.body.classList.add("login-locked");
+      els.loginPassword.value = "";
+      setTimeout(() => els.loginPassword.focus(), 0);
+    }
+
+    function setupLogin() {
+      if (readAuthState()) {
+        unlockApp();
+      } else {
+        lockApp();
+      }
+
+      els.loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (els.loginPassword.value === LOGIN_PASSWORD) {
+          writeAuthState(true);
+          unlockApp();
+          return;
+        }
+        els.loginError.textContent = "密碼不正確，請再試一次。";
+        els.loginPassword.select();
+      });
+
+      els.logoutButton.addEventListener("click", () => {
+        writeAuthState(false);
+        lockApp();
+      });
+    }
 
     function parseMarkdownTable(markdown) {
       const rows = markdown
@@ -614,6 +905,11 @@
       values.forEach((value) => select.append(new Option(value, value)));
     }
 
+    function categoryClass(categoryName) {
+      const match = String(categoryName).match(/^(\d{2})-/);
+      return match ? `cat-${match[1]}` : "cat-01";
+    }
+
     function hydrateControls() {
       setOptions(els.yearFilter, uniqueValues("year"), "全部年度");
       setOptions(els.stageFilter, uniqueValues("stage"), "全部階段");
@@ -626,13 +922,14 @@
       els.yearCount.textContent = uniqueValues("year").length;
       els.categoryCount.textContent = state.categories.length;
       els.categorySummary.textContent = `${state.categories.length} 類`;
+      els.resultsTitle.textContent = `符合條件的題目`;
       els.resultSummary.textContent = `${state.visible.length} 題`;
     }
 
     function renderCategories() {
       const allClass = state.category === "all" ? " active" : "";
       const allButton = `
-        <button class="category-button${allClass}" type="button" data-category="all">
+        <button class="category-button cat-01${allClass}" type="button" data-category="all">
           <span class="category-name">全部分類</span>
           <span class="category-meta">${state.topics.length} 題</span>
         </button>
@@ -642,7 +939,7 @@
         const active = state.category === category.name ? " active" : "";
         const count = topicCountByCategory(category.name);
         return `
-          <button class="category-button${active}" type="button" data-category="${escapeHtml(category.name)}" title="${escapeHtml(category.description)}">
+          <button class="category-button ${categoryClass(category.name)}${active}" type="button" data-category="${escapeHtml(category.name)}" title="${escapeHtml(category.description)}">
             <span class="category-name">${escapeHtml(category.name)}</span>
             <span class="category-meta">${count} 題</span>
           </button>
@@ -669,7 +966,7 @@
       }
 
       els.results.innerHTML = state.visible.map((topic) => `
-        <article class="topic-card">
+        <article class="topic-card ${categoryClass(topic.category)}">
           <h3 class="topic-title">${escapeHtml(topic.title)}</h3>
           <div class="topic-meta">
             <span class="tag year">${escapeHtml(topic.year)} 年</span>
@@ -728,8 +1025,13 @@
         control.addEventListener("input", applyFilters);
       });
 
+      els.searchButton.addEventListener("click", applyFilters);
       els.resetButton.addEventListener("click", resetFilters);
       els.randomButton.addEventListener("click", pickRandomTopic);
+      els.categoryToggle.addEventListener("click", () => {
+        const isOpen = els.categoryPanel.classList.toggle("open");
+        els.categoryToggle.setAttribute("aria-expanded", String(isOpen));
+      });
 
       els.categoryList.addEventListener("click", (event) => {
         const button = event.target.closest("[data-category]");
@@ -738,10 +1040,16 @@
         }
         els.categoryFilter.value = button.dataset.category;
         applyFilters();
+        if (window.matchMedia("(max-width: 560px)").matches) {
+          els.categoryPanel.classList.remove("open");
+          els.categoryToggle.setAttribute("aria-expanded", "false");
+        }
       });
     }
 
     async function init() {
+      setupLogin();
+
       try {
         const categoryMarkdown = embeddedMarkdown.categories;
         const topicMarkdown = embeddedMarkdown.topics;
