@@ -119,6 +119,19 @@
       margin-top: 14px;
     }
 
+    .version-badge {
+      background: var(--gray-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      display: inline-flex;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 12px;
+      padding: 6px 9px;
+    }
+
     main {
       margin: 0 auto;
       max-width: 1180px;
@@ -197,6 +210,10 @@
       z-index: 8;
     }
 
+    .advanced-filters {
+      display: contents;
+    }
+
     .field {
       display: flex;
       flex-direction: column;
@@ -234,6 +251,10 @@
       gap: 8px;
       justify-content: flex-end;
       white-space: nowrap;
+    }
+
+    .filter-toggle {
+      display: none;
     }
 
     button {
@@ -593,7 +614,7 @@
 
       .hero {
         gap: 12px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
       }
 
       .hero-copy p {
@@ -601,12 +622,13 @@
       }
 
       .stats {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: none;
       }
 
       .logout-button {
-        width: 100%;
+        min-height: 34px;
+        padding: 6px 10px;
+        width: auto;
       }
 
       .stat {
@@ -619,15 +641,62 @@
       }
 
       main {
-        padding: 14px 10px 28px;
+        padding: 12px 10px 28px;
       }
 
       .controls {
         gap: 10px;
+        grid-template-columns: 1fr 1fr;
         padding: 12px;
         position: sticky;
         top: 0;
         z-index: 8;
+      }
+
+      .controls .field:first-child {
+        grid-column: 1 / -1;
+      }
+
+      .advanced-filters {
+        display: none;
+        gap: 10px;
+        grid-column: 1 / -1;
+        grid-template-columns: 1fr;
+      }
+
+      .controls.filters-open .advanced-filters {
+        display: grid;
+      }
+
+      .filter-toggle {
+        align-items: center;
+        background: #ffffff;
+        border: 1px solid var(--line);
+        color: var(--brand-dark);
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .actions {
+        display: grid;
+        grid-column: 2;
+        grid-template-columns: 1fr;
+      }
+
+      .actions #searchButton,
+      .actions #resetButton {
+        display: none;
+      }
+
+      .controls.filters-open .actions {
+        grid-column: 1 / -1;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .controls.filters-open .actions #searchButton,
+      .controls.filters-open .actions #resetButton {
+        display: inline-flex;
       }
 
       input,
@@ -637,7 +706,7 @@
       }
 
       .hero-copy h1 {
-        font-size: 24px;
+        font-size: 23px;
       }
 
       .category-head,
@@ -693,6 +762,7 @@
         <div class="login-error" id="loginError" aria-live="polite"></div>
       </form>
       <div class="login-hint">請向老師索取班級共用密碼。</div>
+      <div class="version-badge" data-version-label>版本載入中</div>
     </div>
   </section>
 
@@ -701,6 +771,7 @@
       <div class="hero-copy">
         <h1 id="page-title">幫學生找到剛剛好的練習題目</h1>
         <p>用年度、階段、分類和關鍵字快速篩選演講題目，也可以隨機抽題，適合課堂暖身、回家練習或賽前準備。</p>
+        <span class="version-badge" data-version-label>版本載入中</span>
       </div>
       <div class="hero-tools">
         <button class="logout-button" id="logoutButton" type="button">登出</button>
@@ -730,17 +801,20 @@
         <label for="keyword">關鍵字搜尋</label>
         <input id="keyword" type="search" placeholder="輸入題目、分類或年度，例如：環保、夢想、113">
       </div>
-      <div class="field">
-        <label for="yearFilter">年度</label>
-        <select id="yearFilter"></select>
-      </div>
-      <div class="field">
-        <label for="stageFilter">階段</label>
-        <select id="stageFilter"></select>
-      </div>
-      <div class="field">
-        <label for="categoryFilter">主題分類</label>
-        <select id="categoryFilter"></select>
+      <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="advancedFilters">篩選條件</button>
+      <div class="advanced-filters" id="advancedFilters">
+        <div class="field">
+          <label for="yearFilter">年度</label>
+          <select id="yearFilter"></select>
+        </div>
+        <div class="field">
+          <label for="stageFilter">階段</label>
+          <select id="stageFilter"></select>
+        </div>
+        <div class="field">
+          <label for="categoryFilter">主題分類</label>
+          <select id="categoryFilter"></select>
+        </div>
       </div>
       <div class="actions">
         <button class="primary" id="searchButton" type="button">開始篩選</button>
@@ -788,6 +862,7 @@
 
     const LOGIN_PASSWORD = "0000";
     const AUTH_KEY = "speechTalkUnlocked";
+    const APP_VERSION = "v1.4.0";
 
     const els = {
       loginForm: document.querySelector("#loginForm"),
@@ -795,6 +870,8 @@
       loginError: document.querySelector("#loginError"),
       logoutButton: document.querySelector("#logoutButton"),
       keyword: document.querySelector("#keyword"),
+      controls: document.querySelector(".controls"),
+      filterToggle: document.querySelector("#filterToggle"),
       searchButton: document.querySelector("#searchButton"),
       yearFilter: document.querySelector("#yearFilter"),
       stageFilter: document.querySelector("#stageFilter"),
@@ -813,6 +890,13 @@
       resultsTitle: document.querySelector(".results-head h2"),
       resultSummary: document.querySelector("#resultSummary")
     };
+
+    function renderVersion() {
+      document.querySelectorAll("[data-version-label]").forEach((el) => {
+        el.textContent = `版本 ${APP_VERSION}`;
+      });
+      document.title = `國小演講題目查詢 ${APP_VERSION}`;
+    }
 
     function readAuthState() {
       try {
@@ -844,6 +928,16 @@
       document.body.classList.add("login-locked");
       els.loginPassword.value = "";
       setTimeout(() => els.loginPassword.focus(), 0);
+    }
+
+    function isMobileViewport() {
+      return window.matchMedia("(max-width: 560px)").matches;
+    }
+
+    function setFilterPanel(open) {
+      els.controls.classList.toggle("filters-open", open);
+      els.filterToggle.setAttribute("aria-expanded", String(open));
+      els.filterToggle.textContent = open ? "收合篩選" : "篩選條件";
     }
 
     function setupLogin() {
@@ -994,6 +1088,9 @@
       els.stageFilter.value = "all";
       els.categoryFilter.value = "all";
       applyFilters();
+      if (isMobileViewport()) {
+        setFilterPanel(false);
+      }
     }
 
     function pickRandomTopic() {
@@ -1025,7 +1122,15 @@
         control.addEventListener("input", applyFilters);
       });
 
-      els.searchButton.addEventListener("click", applyFilters);
+      els.searchButton.addEventListener("click", () => {
+        applyFilters();
+        if (isMobileViewport()) {
+          setFilterPanel(false);
+        }
+      });
+      els.filterToggle.addEventListener("click", () => {
+        setFilterPanel(!els.controls.classList.contains("filters-open"));
+      });
       els.resetButton.addEventListener("click", resetFilters);
       els.randomButton.addEventListener("click", pickRandomTopic);
       els.categoryToggle.addEventListener("click", () => {
@@ -1040,14 +1145,16 @@
         }
         els.categoryFilter.value = button.dataset.category;
         applyFilters();
-        if (window.matchMedia("(max-width: 560px)").matches) {
+        if (isMobileViewport()) {
           els.categoryPanel.classList.remove("open");
           els.categoryToggle.setAttribute("aria-expanded", "false");
+          setFilterPanel(false);
         }
       });
     }
 
     async function init() {
+      renderVersion();
       setupLogin();
 
       try {
