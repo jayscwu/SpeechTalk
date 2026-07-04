@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>國小演講題目查詢</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f3ea;
+      --panel: #fffdf8;
+      --ink: #263126;
+      --muted: #687062;
+      --line: #ddd4c3;
+      --brand: #2f765f;
+      --brand-dark: #225947;
+      --brand-soft: #dceee6;
+      --blue: #356f9f;
+      --blue-soft: #e5f0f8;
+      --accent: #d9823b;
+      --accent-soft: #faead9;
+      --gray-soft: #f1eee7;
+      --shadow: 0 16px 38px rgba(75, 61, 35, 0.12);
+      --cat-color: var(--brand);
+      --cat-soft: var(--brand-soft);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft JhengHei", "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+    }
+
+    body.login-locked {
+      overflow: hidden;
+    }
+
+    body.login-locked main {
+      display: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .login-screen {
+      align-items: center;
+      background:
+        radial-gradient(circle at top left, rgba(47, 118, 95, 0.18), transparent 34%),
+        linear-gradient(135deg, #f7f3ea 0%, #edf4ec 100%);
+      display: none;
+      min-height: 100svh;
+      padding: 24px;
+    }
+
+    body.login-locked .login-screen {
+      display: grid;
+    }
+
+    .login-card {
+      background: rgba(255, 253, 248, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin: 0 auto;
+      max-width: 420px;
+      padding: 28px;
+      width: 100%;
+    }
+
+    .login-mark {
+      align-items: center;
+      background: var(--brand);
+      border-radius: 8px;
+      color: white;
+      display: inline-flex;
+      font-size: 22px;
+      font-weight: 900;
+      height: 46px;
+      justify-content: center;
+      margin-bottom: 18px;
+      width: 46px;
+    }
+
+    .login-card h1 {
+      font-size: 28px;
+      line-height: 1.2;
+      margin: 0 0 8px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .login-error {
+      color: #9d3128;
+      font-size: 14px;
+      font-weight: 800;
+      min-height: 20px;
+    }
+
+    .login-hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 14px;
+    }
+
+    main {
+      margin: 0 auto;
+      max-width: 1180px;
+      padding: 18px 20px 44px;
+    }
+
+    .hero {
+      align-items: end;
+      display: flex;
+      gap: 18px;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1.18;
+      margin: 0 0 8px;
+    }
+
+    .hero-copy p {
+      color: var(--muted);
+      font-size: 16px;
+      margin: 0;
+      max-width: 720px;
+    }
+
+    .hero-tools {
+      align-items: flex-end;
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+      min-width: 310px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      box-shadow: none;
+      min-width: 132px;
+      padding: 7px 12px;
+    }
+
+    .stat strong {
+      display: inline;
+      font-size: 18px;
+      line-height: 1;
+      margin-right: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .controls {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 12px;
+      grid-template-columns: minmax(280px, 1.5fr) repeat(3, minmax(128px, 0.5fr)) auto;
+      margin-bottom: 14px;
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 8;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      min-height: 44px;
+      padding: 9px 11px;
+      width: 100%;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus {
+      outline: 3px solid rgba(47, 118, 95, 0.22);
+      outline-offset: 2px;
+    }
+
+    .actions {
+      align-items: end;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      white-space: nowrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 800;
+      min-height: 44px;
+      padding: 10px 14px;
+    }
+
+    .primary {
+      background: var(--brand);
+      color: white;
+      min-width: 112px;
+    }
+
+    .primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .ghost {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .logout-button {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      min-height: 36px;
+      padding: 7px 11px;
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .category-panel,
+    .results-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .category-panel {
+      overflow: hidden;
+      position: sticky;
+      top: 96px;
+    }
+
+    .category-panel h2,
+    .results-head h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .category-head,
+    .results-head {
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      padding: 14px 16px;
+    }
+
+    .category-head {
+      background: transparent;
+      border-left: 0;
+      border-right: 0;
+      border-top: 0;
+      color: var(--ink);
+      min-height: 0;
+      text-align: left;
+      width: 100%;
+    }
+
+    .category-list {
+      display: grid;
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .category-button {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cat-color);
+      border-radius: 8px;
+      color: var(--ink);
+      display: grid;
+      gap: 2px;
+      justify-items: start;
+      min-height: 0;
+      padding: 10px 12px;
+      text-align: left;
+      transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      width: 100%;
+    }
+
+    .category-button:hover {
+      background: var(--cat-soft);
+      border-color: var(--cat-color);
+      box-shadow: 0 8px 18px rgba(75, 61, 35, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .category-button.active {
+      background: var(--cat-color);
+      border-color: var(--cat-color);
+      color: white;
+    }
+
+    .category-button.active .category-meta {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .category-name {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .category-meta {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .count-pill {
+      background: var(--accent-soft);
+      border-radius: 999px;
+      color: #8b4b1f;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 3px 9px;
+      white-space: nowrap;
+    }
+
+    .results {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .topic-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--cat-color);
+      border-radius: 8px;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      padding: 12px 14px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .topic-card:hover {
+      border-color: var(--cat-color);
+      box-shadow: 0 10px 22px rgba(75, 61, 35, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .topic-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .topic-meta {
+      align-items: center;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 13px;
+      gap: 7px;
+    }
+
+    .tag {
+      background: #eef2ea;
+      border-radius: 999px;
+      color: #43503f;
+      display: inline-flex;
+      font-weight: 700;
+      padding: 3px 8px;
+    }
+
+    .tag.year {
+      background: var(--gray-soft);
+      color: #625e55;
+    }
+
+    .tag.stage {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .tag.category {
+      background: var(--cat-soft);
+      color: var(--cat-color);
+    }
+
+    .cat-01 {
+      --cat-color: #2f765f;
+      --cat-soft: #dceee6;
+    }
+
+    .cat-02 {
+      --cat-color: #2f6f9f;
+      --cat-soft: #e1eef8;
+    }
+
+    .cat-03 {
+      --cat-color: #b45f3c;
+      --cat-soft: #f7e5dc;
+    }
+
+    .cat-04 {
+      --cat-color: #8b63b8;
+      --cat-soft: #eee5f7;
+    }
+
+    .cat-05 {
+      --cat-color: #c06d8b;
+      --cat-soft: #f8e4ec;
+    }
+
+    .cat-06 {
+      --cat-color: #4f8b3a;
+      --cat-soft: #e4f1df;
+    }
+
+    .cat-07 {
+      --cat-color: #4e6bc0;
+      --cat-soft: #e5eafb;
+    }
+
+    .cat-08 {
+      --cat-color: #c98224;
+      --cat-soft: #faecd7;
+    }
+
+    .cat-09 {
+      --cat-color: #7a6f2e;
+      --cat-soft: #eeeacc;
+    }
+
+    .cat-10 {
+      --cat-color: #32818b;
+      --cat-soft: #dff1f2;
+    }
+
+    .cat-11 {
+      --cat-color: #9c4b9d;
+      --cat-soft: #f1e1f2;
+    }
+
+    .cat-12 {
+      --cat-color: #60733c;
+      --cat-soft: #e7eddc;
+    }
+
+    .empty,
+    .loading,
+    .error {
+      color: var(--muted);
+      padding: 34px 18px;
+      text-align: center;
+    }
+
+    .error {
+      color: #9d3128;
+      font-weight: 700;
+    }
+
+    .tip-box {
+      background: var(--accent-soft);
+      border: 1px solid #f0cfaa;
+      border-radius: 8px;
+      color: #704019;
+      margin-top: 14px;
+      padding: 12px 14px;
+    }
+
+    .tip-box strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 920px) {
+      .layout,
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        position: static;
+      }
+
+      .hero {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-tools {
+        justify-items: stretch;
+        width: 100%;
+      }
+
+      .logout-button {
+        justify-self: end;
+      }
+
+      .stats {
+        justify-content: flex-start;
+        min-width: 0;
+        width: 100%;
+      }
+
+      .stat {
+        flex: 1 1 140px;
+      }
+
+      .category-panel {
+        position: static;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      .actions button {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .login-screen {
+        align-items: start;
+        padding: 16px;
+      }
+
+      .login-card {
+        margin-top: 8vh;
+        padding: 22px;
+      }
+
+      .login-card h1 {
+        font-size: 24px;
+      }
+
+      .hero {
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .hero-copy p {
+        font-size: 14px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .logout-button {
+        width: 100%;
+      }
+
+      .stat {
+        min-width: 0;
+        padding: 7px 9px;
+      }
+
+      .stat strong {
+        font-size: 17px;
+      }
+
+      main {
+        padding: 14px 10px 28px;
+      }
+
+      .controls {
+        gap: 10px;
+        padding: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 8;
+      }
+
+      input,
+      select,
+      button {
+        min-height: 46px;
+      }
+
+      .hero-copy h1 {
+        font-size: 24px;
+      }
+
+      .category-head,
+      .results-head {
+        padding: 12px;
+      }
+
+      .category-head {
+        cursor: pointer;
+      }
+
+      .category-list {
+        display: none;
+        grid-template-columns: 1fr;
+        padding: 10px 12px 12px;
+      }
+
+      .category-panel.open .category-list {
+        display: grid;
+      }
+
+      .topic-card {
+        grid-template-columns: 1fr;
+        padding: 11px 12px;
+      }
+
+      .topic-title {
+        font-size: 17px;
+      }
+
+      .topic-meta {
+        gap: 6px;
+      }
+
+      .tag {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body class="login-locked">
+  <section class="login-screen" aria-labelledby="login-title">
+    <div class="login-card">
+      <div class="login-mark">講</div>
+      <h1 id="login-title">國小演講題目查詢</h1>
+      <p>請輸入班級共用密碼後開始查詢題目。</p>
+      <form class="login-form" id="loginForm">
+        <div class="field">
+          <label for="loginPassword">密碼</label>
+          <input id="loginPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="請輸入密碼">
+        </div>
+        <button class="primary" type="submit">進入查詢</button>
+        <div class="login-error" id="loginError" aria-live="polite"></div>
+      </form>
+      <div class="login-hint">請向老師索取班級共用密碼。</div>
+    </div>
+  </section>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <h1 id="page-title">幫學生找到剛剛好的練習題目</h1>
+        <p>用年度、階段、分類和關鍵字快速篩選演講題目，也可以隨機抽題，適合課堂暖身、回家練習或賽前準備。</p>
+      </div>
+      <div class="hero-tools">
+        <button class="logout-button" id="logoutButton" type="button">登出</button>
+        <div class="stats" aria-label="資料統計">
+          <div class="stat">
+            <strong id="totalTopics">0</strong>
+            <span>題演講題目</span>
+          </div>
+          <div class="stat">
+            <strong id="visibleTopics">0</strong>
+            <span>目前符合條件</span>
+          </div>
+          <div class="stat">
+            <strong id="yearCount">0</strong>
+            <span>個年度</span>
+          </div>
+          <div class="stat">
+            <strong id="categoryCount">0</strong>
+            <span>個主題分類</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="查詢條件">
+      <div class="field">
+        <label for="keyword">關鍵字搜尋</label>
+        <input id="keyword" type="search" placeholder="輸入題目、分類或年度，例如：環保、夢想、113">
+      </div>
+      <div class="field">
+        <label for="yearFilter">年度</label>
+        <select id="yearFilter"></select>
+      </div>
+      <div class="field">
+        <label for="stageFilter">階段</label>
+        <select id="stageFilter"></select>
+      </div>
+      <div class="field">
+        <label for="categoryFilter">主題分類</label>
+        <select id="categoryFilter"></select>
+      </div>
+      <div class="actions">
+        <button class="primary" id="searchButton" type="button">開始篩選</button>
+        <button class="primary" id="randomButton" type="button">隨機抽題</button>
+        <button class="ghost" id="resetButton" type="button">清除條件</button>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="category-panel" aria-label="主題分類列表">
+        <button class="category-head" id="categoryToggle" type="button" aria-expanded="false" aria-controls="categoryList">
+          <h2>主題分類</h2>
+          <span class="count-pill" id="categorySummary">0 類</span>
+        </button>
+        <div class="category-list" id="categoryList"></div>
+      </aside>
+
+      <section class="results-panel" aria-live="polite">
+        <div class="results-head">
+          <h2>題目列表</h2>
+          <span class="count-pill" id="resultSummary">讀取中</span>
+        </div>
+        <div class="results" id="results">
+          <div class="loading">正在讀取 Markdown 資料...</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const embeddedMarkdown = {
+      categories: "# 分類項目\n\n|項次|分類名稱|分類內容|\r\n|---|---|---|\r\n|1|01-個人成長與品德反思|包含所有關於失敗、誠實、長大、獨立、時間管理與人生座右銘的題目。|\r\n|2|02-校園生活與學習點滴|包含課堂體驗、學校活動、值日生、班級幹部、上下課時間、午餐與打掃時光。|\r\n|3|03-家庭親情與居家生活|包含與父母的互動、家事經驗、家庭防疫、房間與家常菜等。|\r\n|4|04-敘事與難忘經驗|包含各類校外教學、特別的節日體驗、爬山、逛街與旅行。|\r\n|5|05-人際關係與社會互動|包含交朋友、與同學吵架、在志工身上學到的事以及團隊合作。|\r\n|6|06-大自然與環境保護|包含對大自然的觀察、流汗的感覺、地震與颱風等防災經驗，以及減塑和環保行動。|\r\n|7|07-社會時事與現代科技|包含疫情生活、手機與3C產品、網路世界、新聞啟示與戰爭、空氣汙染等。|\r\n|8|08-興趣、休閒與日常生活|包含運動、看電視、休閒活動、去過的公共場所、交通工具與日常消費。|\r\n|9|09-藝文、閱讀與媒體探索|包含去圖書館的體驗、最喜歡的書籍、YouTube 頻道、奧運賽事與電影音樂等。|\r\n|10|10-身心健康與生活體驗|包含生病看牙醫的經驗、健康管理、孤單或獨處時的心境。|\r\n|11|11-想像、創意與角色扮演|包含所有「如果我是…」的想像型題目，如發明家、有任意門、有超能力或蓋學校。|\r\n|12|12-鄉土、國際與多元角色|包含介紹家鄉、外國人互動、想去的城市與探索國家。|\r\n",
+      topics: "# 國小演講題目分類\n\n|項次|年度|階段|演講題目|主題分類|\r\n|---|---|---|---|---|\r\n|1|109|第一階段|一本書給我的啟示|01-個人成長與品德反思|\r\n|2|109|第一階段|一次參觀美展的經驗|04-敘事與難忘經驗|\r\n|3|109|第一階段|一次視訊教學的體驗|07-社會時事與現代科技|\r\n|4|109|第一階段|一次難忘的校外教學|04-敘事與難忘經驗|\r\n|5|109|第一階段|上音樂課|02-校園生活與學習點滴|\r\n|6|109|第一階段|上體育課|02-校園生活與學習點滴|\r\n|7|109|第一階段|分享，是最好的交流|05-人際關係與社會互動|\r\n|8|109|第一階段|友情的可貴|05-人際關係與社會互動|\r\n|9|109|第一階段|市長，我想對您說|11-想像、創意與角色扮演|\r\n|10|109|第一階段|如果14天不能出門|11-想像、創意與角色扮演|\r\n|11|109|第一階段|如果上學不用背書包|02-校園生活與學習點滴|\r\n|12|109|第一階段|如果不再有考試|02-校園生活與學習點滴|\r\n|13|109|第一階段|如果可以重來一次|01-個人成長與品德反思|\r\n|14|109|第一階段|如果你問我台北哪裡最好玩|12-鄉土、國際與多元角色|\r\n|15|109|第一階段|如果我是老師|02-校園生活與學習點滴|\r\n|16|109|第一階段|如果我是清潔隊員|11-想像、創意與角色扮演|\r\n|17|109|第一階段|如果我是新聞主播|11-想像、創意與角色扮演|\r\n|18|109|第一階段|如果我是新聞記者|11-想像、創意與角色扮演|\r\n|19|109|第一階段|如果我是警察|11-想像、創意與角色扮演|\r\n|20|109|第一階段|如果我能在天上飛|11-想像、創意與角色扮演|\r\n|21|109|第一階段|容果我能穿越時間|11-想像、創意與角色扮演|\r\n|22|109|第一階段|如果我能瞬間移動|11-想像、創意與角色扮演|\r\n|23|109|第一階段|如果我得居家檢疫14天|03-家庭親情與居家生活|\r\n|24|109|第一階段|如果每天只上半天課|02-校園生活與學習點滴|\r\n|25|109|第一階段|有趣的科學實驗|02-校園生活與學習點滴|\r\n|26|109|第一階段|肉眼看不到的敵人|07-社會時事與現代科技|\r\n|27|109|第一階段|我心目中的好老師|02-校園生活與學習點滴|\r\n|28|109|第一階段|我在志工身上學到的事|05-人際關係與社會互動|\r\n|29|109|第一階段|我如何保護牙齒|03-家庭親情與居家生活|\r\n|30|109|第一階段|我如何保護眼睛|03-家庭親情與居家生活|\r\n|31|109|第一階段|我如何紓解壓力|01-個人成長與品德反思|\r\n|32|109|第一階段|讓人終生受用的好習慣|01-個人成長與品德反思|\r\n|33|109|第一階段|我如何管理時間|01-個人成長與品德反思|\r\n|34|109|第一階段|我的消暑秘方|08-興趣、休閒與日常生活|\r\n|35|109|第一階段|我的秘密基地|08-興趣、休閒與日常生活|\r\n|36|109|第一階段|我的暑假生活|02-校園生活與學習點滴|\r\n|37|109|第一階段|我的夢境|11-想像、創意與角色扮演|\r\n|38|109|第一階段|我是值日生|02-校園生活與學習點滴|\r\n|39|109|第一階段|我是家事小達人|03-家庭親情與居家生活|\r\n|40|109|第一階段|我能為地球做的事|06-大自然與環境保護|\r\n|41|109|第一階段|我喜歡這樣讀書|02-校園生活與學習點滴|\r\n|42|109|第一階段|我最欣賞的一個人|01-個人成長與品德反思|\r\n|43|109|第一階段|我最常去的校園角落|02-校園生活與學習點滴|\r\n|44|109|第一階段|我最喜歡的休閒活動|08-興趣、休閒與日常生活|\r\n|45|109|第一階段|我最喜歡做的家事|03-家庭親情與居家生活|\r\n|46|109|第一階段|我最想送給家人的禮物|03-家庭親情與居家生活|\r\n|47|109|第一階段|我對未來的夢想|01-個人成長與品德反思|\r\n|48|109|第一階段|我對教室裝冷氣的看法|02-校園生活與學習點滴|\r\n|49|109|第一階段|爸媽對我的期許|03-家庭親情與居家生活|\r\n|50|109|第一階段|保持社交距離|07-社會時事與現代科技|\r\n|51|109|第一階段|為地球盡一份力|06-大自然與環境保護|\r\n|52|109|第一階段|美好的旅行|04-敘事與難忘經驗|\r\n|53|109|第一階段|倒垃圾|03-家庭親情與居家生活|\r\n|54|109|第一階段|時間掌握在我手上|01-個人成長與品德反思|\r\n|55|109|第一階段|書中的世界|09-藝文、閱讀與媒體探索|\r\n|56|109|第一階段|校園裡的超級英雄|02-校園生活與學習點滴|\r\n|57|109|第一階段|班級幹部甘苦談|02-校園生活與學習點滴|\r\n|58|109|第一階段|笑容，是最好的化妝品|01-個人成長與品德反思|\r\n|59|109|第一階段|做時間的主人|01-個人成長與品德反思|\r\n|60|109|第一階段|國小學生的煩惱|01-個人成長與品德反思|\r\n|61|109|第一階段|逛便利商店|08-興趣、休閒與日常生活|\r\n|62|109|第一階段|陪伴，是最好的禮物|05-人際關係與社會互動|\r\n|63|109|第一階段|最值得我學習的偶像|01-個人成長與品德反思|\r\n|64|109|第一階段|給自己一個掌聲|01-個人成長與品德反思|\r\n|65|109|第一階段|開班會|02-校園生活與學習點滴|\r\n|66|109|第一階段|媽媽，我長大了|03-家庭親情與居家生活|\r\n|67|109|第一階段|想對爸媽說的真心話|03-家庭親情與居家生活|\r\n|68|109|第一階段|新冠肺炎給我的省思|07-社會時事與現代科技|\r\n|69|109|第一階段|當我看到蟑螂的時候|03-家庭親情與居家生活|\r\n|70|109|第一階段|運動好處多|08-興趣、休閒與日常生活|\r\n|71|109|第一階段|圖書館與我|09-藝文、閱讀與媒體探索|\r\n|72|109|第一階段|颱風過後的省思|06-大自然與環境保護|\r\n|73|109|第一階段|請到我的家鄉來|12-鄉土、國際與多元角色|\r\n|74|109|第一階段|學校的打掃時間|02-校園生活與學習點滴|\r\n|75|109|第一階段|學校的志工|05-人際關係與社會互動|\r\n|76|109|第一階段|學校的無名英雄|02-校園生活與學習點滴|\r\n|77|109|第一階段|懂得欣賞，就是快樂|01-個人成長與品德反思|\r\n|78|109|第一階段|戴口罩的日子|07-社會時事與現代科技|\r\n|79|109|第二階段|再試一下|01-個人成長與品德反思|\r\n|80|109|第二階段|如果有外國人向我問路|12-鄉土、國際與多元角色|\r\n|81|109|第二階段|如果我是演說比賽的出題老師|11-想像、創意與角色扮演|\r\n|82|109|第二階段|如果我是演說比賽的評審老師|11-想像、創意與角色扮演|\r\n|83|109|第二階段|如果我精通十國語言|11-想像、創意與角色扮演|\r\n|84|109|第二階段|我如何克服上台的緊張|01-個人成長與品德反思|\r\n|85|109|第二階段|我如何面對壓力|01-個人成長與品德反思|\r\n|86|109|第二階段|我如何準備國語演說|01-個人成長與品德反思|\r\n|87|109|第二階段|我如何讓自己快樂|01-個人成長與品德反思|\r\n|88|109|第二階段|我自己如何防疫|01-個人成長與品德反思|\r\n|89|109|第二階段|我的生日|03-家庭親情與居家生活|\r\n|90|109|第二階段|我的自由時間|01-個人成長與品德反思|\r\n|91|109|第二階段|我的紓壓方式|01-個人成長與品德反思|\r\n|92|109|第二階段|我們所面對的未來世界|11-想像、創意與角色扮演|\r\n|93|109|第二階段|我們家如何防疫|03-家庭親情與居家生活|\r\n|94|109|第二階段|我們這一家|03-家庭親情與居家生活|\r\n|95|109|第二階段|我最想聽懂的幾種語言|12-鄉土、國際與多元角色|\r\n|96|109|第二階段|我想去探索的國家|12-鄉土、國際與多元角色|\r\n|97|109|第二階段|我想對爸媽說的話|03-家庭親情與居家生活|\r\n|98|109|第二階段|那些不知如何對爸媽說的話|03-家庭親情與居家生活|\r\n|99|109|第二階段|為何我會參加國語演說比賽|01-個人成長與品德反思|\r\n|100|109|第二階段|接觸外國人的經驗|12-鄉土、國際與多元角色|\r\n|101|109|第二階段|當不快樂的時候|01-個人成長與品德反思|\r\n|102|109|第二階段|我生氣的時候|01-個人成長與品德反思|\r\n|103|109|第二階段|當我覺得被誤解的時候|01-個人成長與品德反思|\r\n|104|109|第二階段|談國語演說|01-個人成長與品德反思|\r\n|105|110|第一階段|防疫新生活|07-社會時事與現代科技|\r\n|106|110|第一階段|面對疫情，我能做哪些事？|07-社會時事與現代科技|\r\n|107|110|第一階段|線上學習與我|02-校園生活與學習點滴|\r\n|108|110|第一階段|下廚的經驗|03-家庭親情與居家生活|\r\n|109|110|第一階段|今年暑假我學會的事|01-個人成長與品德反思|\r\n|110|110|第一階段|當地震發生時|06-大自然與環境保護|\r\n|111|110|第一階段|放學後|08-興趣、休閒與日常生活|\r\n|112|110|第一階段|一次失敗的經驗|01-個人成長與品德反思|\r\n|113|110|第一階段|大自然給我的啟示|06-大自然與環境保護|\r\n|114|110|第一階段|我如何為環保盡一份力|06-大自然與環境保護|\r\n|115|110|第一階段|我最想感謝的人|01-個人成長與品德反思|\r\n|116|110|第一階段|我最喜歡的一部電影|09-藝文、閱讀與媒體探索|\r\n|117|110|第一階段|我最喜歡的校園角落|02-校園生活與學習點滴|\r\n|118|110|第一階段|我最感動的一件事|01-個人成長與品德反思|\r\n|119|110|第一階段|我的學校生活|02-校園生活與學習點滴|\r\n|120|110|第一階段|我的下課時間|02-校園生活與學習點滴|\r\n|121|110|第一階段|常懷感恩心|01-個人成長與品德反思|\r\n|122|110|第一階段|當我做錯事的時候|01-個人成長與品德反思|\r\n|123|110|第一階段|假如我是臺北市長|11-想像、創意與角色扮演|\r\n|124|110|第一階段|2020東京奧運|09-藝文、閱讀與媒體探索|\r\n|125|110|第一階段|我看東京奧運|09-藝文、閱讀與媒體探索|\r\n|126|110|第一階段|看不見的敵人|07-社會時事與現代科技|\r\n|127|110|第一階段|我的書包|02-校園生活與學習點滴|\r\n|128|110|第一階段|便利商店與我|08-興趣、休閒與日常生活|\r\n|129|110|第一階段|手機與我|07-社會時事與現代科技|\r\n|130|110|第一階段|一次被誤會的經驗|01-個人成長與品德反思|\r\n|131|110|第一階段|逛夜市|04-敘事與難忘經驗|\r\n|132|110|第二階段|我對停課不停學的看法|07-社會時事與現代科技|\r\n|133|110|第二階段|我的課後活動|08-興趣、休閒與日常生活|\r\n|134|110|第二階段|如果我有超能力|11-想像、創意與角色扮演|\r\n|135|110|第二階段|From 失敗中成長|01-個人成長與品德反思|\r\n|136|110|第二階段|人因夢想而偉大|01-個人成長與品德反思|\r\n|137|110|第二階段|行善要從行動開始|01-個人成長與品德反思|\r\n|138|110|第二階段|我所認為的好品德|01-個人成長與品德反思|\r\n|139|110|第二階段|視訊上課的經驗|02-校園生活與學習點滴|\r\n|140|110|第二階段|我最想當的班級幹部|02-校園生活與學習點滴|\r\n|141|110|第二階段|運動身體好|08-興趣、休閒與日常生活|\r\n|142|110|第二階段|為防疫盡一份力|07-社會時事與現代科技|\r\n|143|110|第二階段|長大後最想做的工作|01-個人成長與品德反思|\r\n|144|110|第二階段|防疫，讓我學會的事|03-家庭親情與居家生活|\r\n|145|110|第二階段|舉手之勞做環保|06-大自然與環境保護|\r\n|146|110|第二階段|今年最難忘的事|01-個人成長與品德反思|\r\n|147|110|第二階段|如何交到好朋友|05-人際關係與社會互動|\r\n|148|110|第二階段|面對挫折|01-個人成長與品德反思|\r\n|149|110|第二階段|我的優點和缺點|01-個人成長與品德反思|\r\n|150|110|第二階段|當我獨處時|10-身心健康與生活體驗|\r\n|151|110|第二階段|搭乘捷運的經驗|08-興趣、休閒與日常生活|\r\n|152|110|第二階段|讓我煩惱的事|01-個人成長與品德反思|\r\n|153|110|第二階段|YouTube與我|09-藝文、閱讀與媒體探索|\r\n|154|110|第二階段|助人為快樂之本|05-人際關係與社會互動|\r\n|155|110|第二階段|誠實與謊言|01-個人成長與品德反思|\r\n|156|110|第二階段|堅持到底|01-個人成長與品德反思|\r\n|157|111|第一階段|比讀書更重要的事|01-個人成長與品德反思|\r\n|158|111|第一階段|運動與我|08-興趣、休閒與日常生活|\r\n|159|111|第一階段|難忘的校外教學|04-敘事與難忘經驗|\r\n|160|111|第一階段|我最想要的生日禮物|01-個人成長與品德反思|\r\n|161|111|第一階段|交通安全的重要|01-個人成長與品德反思|\r\n|162|111|第一階段|我闖禍了|01-個人成長與品德反思|\r\n|163|111|第一階段|今年暑假最特別的收穫|04-敘事與難忘經驗|\r\n|164|111|第一階段|我最喜歡的領域課程|02-校園生活與學習點滴|\r\n|165|111|第一階段|我最想擁有的才藝|01-個人成長與品德反思|\r\n|166|111|第一階段|一次逛書店的經驗|04-敘事與難忘經驗|\r\n|167|111|第一階段|如果我是電腦老師|11-想像、創意與角色扮演|\r\n|168|111|第一階段|我最想推薦的一本書|09-藝文、閱讀與媒體探索|\r\n|169|111|第一階段|當我孤單的時候|10-身心健康與生活體驗|\r\n|170|111|第一階段|遠距學習的苦與樂|01-個人成長與品德反思|\r\n|171|111|第一階段|小故事也有大道理|01-個人成長與品德反思|\r\n|172|111|第一階段|我心目中的臺灣之光|01-個人成長與品德反思|\r\n|173|111|第一階段|我對圖書館的想像|01-個人成長與品德反思|\r\n|174|111|第一階段|如果讓我設計一座遊樂園|11-想像、創意與角色扮演|\r\n|175|111|第一階段|一則新聞給我的啟示|01-個人成長與品德反思|\r\n|176|111|第一階段|享受流汗的感覺|06-大自然與環境保護|\r\n|177|111|第一階段|學校的午餐時光|02-校園生活與學習點滴|\r\n|178|111|第一階段|我最期待的節日|04-敘事與難忘經驗|\r\n|179|111|第一階段|最動人的一刻|09-藝文、閱讀與媒體探索|\r\n|180|111|第一階段|我最喜歡的一個國字|01-個人成長與品德反思|\r\n|181|111|第一階段|大自然是我的老師|06-大自然與環境保護|\r\n|182|111|第一階段|我最喜歡的季節|06-大自然與環境保護|\r\n|183|111|第一階段|如果沒有家庭作業|02-校園生活與學習點滴|\r\n|184|111|第一階段|我的線上學習經驗|02-校園生活與學習點滴|\r\n|185|111|第一階段|我最需要的一樣東西|01-個人成長與品德反思|\r\n|186|111|第一階段|我最喜歡的學校活動|02-校園生活與學習點滴|\r\n|187|111|第一階段|愛護地球的方法|06-大自然與環境保護|\r\n|188|111|第一階段|我最喜歡的一篇課文|02-校園生活與學習點滴|\r\n|189|111|第一階段|除了臺北，我最想去的城市|12-鄉土、國際與多元角色|\r\n|190|111|第一階段|3C產品與我|07-社會時事與現代科技|\r\n|191|111|第一階段|節能減碳從我做起|06-大自然與環境保護|\r\n|192|111|第一階段|我最尊敬的職業|06-大自然與環境保護|\r\n|193|111|第一階段|如果我有時光機|11-想像、創意與角色扮演|\r\n|194|111|第一階段|一次爬山的經驗|04-敘事與難忘經驗|\r\n|195|111|第一階段|我最拿手的運動|08-興趣、休閒與日常生活|\r\n|196|111|第一階段|一次和同學吵架的經驗|05-人際關係與社會互動|\r\n|197|111|第一階段|大眾運輸工具與我|08-興趣、休閒與日常生活|\r\n|198|111|第一階段|打疫苗前後|07-社會時事與現代科技|\r\n|199|111|第一階段|如果我成為市長|11-想像、創意與角色扮演|\r\n|200|111|第一階段|孝順要即時|01-個人成長與品德反思|\r\n|201|111|第一階段|自己動手做|01-個人成長與品德反思|\r\n|202|111|第一階段|如果讓我蓋一所學校|11-想像、創意與角色扮演|\r\n|203|111|第一階段|到同學家玩的經驗|04-敘事與難忘經驗|\r\n|204|111|第一階段|我的同學確診了|07-社會時事與現代科技|\r\n|205|111|第一階段|我最喜歡的YouTube頻道|09-藝文、閱讀與媒體探索|\r\n|206|111|第一階段|我最喜歡的交通工具|08-興趣、休閒與日常生活|\r\n|207|111|第一階段|做一個受歡迎的小學生|01-個人成長與品德反思|\r\n|208|111|第一階段|朋友是永遠的財富|05-人際關係與社會互動|\r\n|209|111|第一階段|我最想做的一件事|01-個人成長與品德反思|\r\n|210|111|第一階段|停電的夜晚|10-身心健康與生活體驗|\r\n|211|111|第一階段|社群軟體與我|07-社會時事與現代科技|\r\n|212|111|第一階段|這原來是一場夢|02-校園生活與學習點滴|\r\n|213|111|第一階段|逛大賣場的經驗|04-敘事與難忘經驗|\r\n|214|111|第一階段|零用錢|10-身心健康與生活體驗|\r\n|215|111|第一階段|我最拿手的家事|03-家庭親情與居家生活|\r\n|216|111|第一階段|讓我驕傲的一件事|01-個人成長與品德反思|\r\n|217|111|第一階段|持續防疫不鬆懈|07-社會時事與現代科技|\r\n|218|111|第二階段|生活中的好幫手|03-家庭親情與居家生活|\r\n|219|111|第二階段|愛護地球從我做起|06-大自然與環境保護|\r\n|220|111|第二階段|欣賞別人，肯定自己|01-個人成長與品德反思|\r\n|221|111|第二階段|相信就是力量|01-個人成長與品德反思|\r\n|222|111|第二階段|網路世界停看聽|07-社會時事與現代科技|\r\n|223|111|第二階段|分享的快樂|05-人際關係與社會互動|\r\n|224|111|第二階段|我對遠距學習的看法|07-社會時事與現代科技|\r\n|225|111|第二階段|最特別的一份作業|02-校園生活與學習點滴|\r\n|226|111|第二階段|遇到外國人的經驗|12-鄉土、國際與多元角色|\r\n|227|111|第二階段|一次闖禍的經驗|01-個人成長與品德反思|\r\n|228|111|第二階段|面帶微笑|01-個人成長與品德反思|\r\n|229|111|第二階段|我最喜歡使用的APP|08-興趣、休閒與日常生活|\r\n|230|111|第二階段|書是降落傘，打開來才有用|09-藝文、閱讀與媒體探索|\r\n|231|111|第二階段|如何成為別人的好朋友|05-人際關係與社會互動|\r\n|232|111|第二階段|一堂難忘的自然實驗課|02-校園生活與學習點滴|\r\n|233|111|第二階段|學校的防震演練|06-大自然與環境保護|\r\n|234|111|第二階段|一件值得我堅持的事|01-個人成長與品德反思|\r\n|235|111|第二階段|快樂其實很簡單|01-個人成長與品德反思|\r\n|236|111|第二階段|學校以外的教室|12-鄉土、國際與多元角色|\r\n|237|111|第二階段|我盡力了|01-個人成長與品德反思|\r\n|238|111|第二階段|班上有同學確診|07-社會時事與現代科技|\r\n|239|111|第二階段|學習程式設計的經驗|02-校園生活與學習點滴|\r\n|240|111|第二階段|我最不想失去的東西|01-個人成長與品德反思|\r\n|241|111|第二階段|做個神隊友|05-人際關係與社會互動|\r\n|242|111|第二階段|參加演說比賽的心路歷程|01-個人成長與品德反思|\r\n|243|111|第二階段|超越自己|01-個人成長與品德反思|\r\n|244|112|第一階段|防疫解封後的心情|07-社會時事與現代科技|\r\n|245|112|第一階段|一次被處罰的經驗|01-個人成長與品德反思|\r\n|246|112|第一階段|一次難忘的校外教學|04-敘事與難忘經驗|\r\n|247|112|第一階段|一則新聞的啟示|07-社會時事與現代科技|\r\n|248|112|第一階段|上游泳課|02-校園生活與學習點滴|\r\n|249|112|第一階段|上電腦課|02-校園生活與學習點滴|\r\n|250|112|第一階段|大掃除|02-校園生活與學習點滴|\r\n|251|112|第一階段|今年暑假|04-敘事與難忘經驗|\r\n|252|112|第一階段|升旗典禮|02-校園生活與學習點滴|\r\n|253|112|第一階段|生病的時候|10-身心健康與生活體驗|\r\n|254|112|第一階段|如果我是市長|11-想像、創意與角色扮演|\r\n|255|112|第一階段|如果我是校長|11-想像、創意與角色扮演|\r\n|256|112|第一階段|考試前後|02-校園生活與學習點滴|\r\n|257|112|第一階段|我的心事|01-個人成長與品德反思|\r\n|258|112|第一階段|我的房間|03-家庭親情與居家生活|\r\n|259|112|第一階段|我的家人|03-家庭親情與居家生活|\r\n|260|112|第一階段|我的休閒活動|08-興趣、休閒與日常生活|\r\n|261|112|第一階段|我的拿手才藝|01-個人成長與品德反思|\r\n|262|112|第一階段|我的優缺點|01-個人成長與品德反思|\r\n|263|112|第一階段|我們這一班|02-校園生活與學習點滴|\r\n|264|112|第一階段|我最要好的朋友|05-人際關係與社會互動|\r\n|265|112|第一階段|我最喜歡的一本書|09-藝文、閱讀與媒體探索|\r\n|266|112|第一階段|我最喜歡的一位老師|02-校園生活與學習點滴|\r\n|267|112|第一階段|我最喜歡的一首詩|09-藝文、閱讀與媒體探索|\r\n|268|112|第一階段|我最喜歡的動物|06-大自然與環境保護|\r\n|269|112|第一階段|我最羨慕的人|01-個人成長與品德反思|\r\n|270|112|第一階段|我想對老師說的話|02-校園生活與學習點滴|\r\n|271|112|第一階段|我想對校長說的話|02-校園生活與學習點滴|\r\n|272|112|第一階段|放學回到家之後|04-敘事與難忘經驗|\r\n|273|112|第一階段|便利商店|08-興趣、休閒與日常生活|\r\n|274|112|第一階段|看牙醫|10-身心健康與生活體驗|\r\n|275|112|第一階段|看病的經驗|10-身心健康與生活體驗|\r\n|276|112|第一階段|看電視|08-興趣、休閒與日常生活|\r\n|277|112|第一階段|第二節大下課|02-校園生活與學習點滴|\r\n|278|112|第一階段|腳踏車與我|08-興趣、休閒與日常生活|\r\n|279|112|第一階段|閱讀的樂趣|09-藝文、閱讀與媒體探索|\r\n|280|112|第一階段|學校的便服日|02-校園生活與學習點滴|\r\n|281|112|第一階段|懷念的日子|02-校園生活與學習點滴|\r\n|282|112|第一階段|誠實的重要|01-個人成長與品德反思|\r\n|283|112|第一階段|難忘的一堂課|02-校園生活與學習點滴|\r\n|284|112|第一階段|做家事樂趣多|03-家庭親情與居家生活|\r\n|285|112|第一階段|隨手做環保|06-大自然與環境保護|\r\n|286|112|第一階段|看書樂趣多|09-藝文、閱讀與媒體探索|\r\n|287|112|第一階段|我最想推薦的一部電影|09-藝文、閱讀與媒體探索|\r\n|288|112|第一階段|一次校外教學的經驗|04-敘事與難忘經驗|\r\n|289|112|第一階段|我最欣賞的歌手|09-藝文、閱讀與媒體探索|\r\n|290|112|第一階段|停電的時候|10-身心健康與生活體驗|\r\n|291|112|第一階段|如果世界沒有網路|07-社會時事與現代科技|\r\n|292|112|第一階段|我的假日生活|04-敘事與難忘經驗|\r\n|293|112|第一階段|戰爭的可怕|07-社會時事與現代科技|\r\n|294|112|第一階段|我對空氣汙染的看法|07-社會時事與現代科技|\r\n|295|112|第一階段|傾聽同學的聲音|05-人際關係與社會互動|\r\n|296|112|第一階段|分享我的讀書秘訣|01-個人成長與品德反思|\r\n|297|112|第一階段|學校的圖書館|08-興趣、休閒與日常生活|\r\n|298|112|第一階段|當挫折來臨時|01-個人成長與品德反思|\r\n|299|112|第一階段|我對教室佈置的想像|02-校園生活與學習點滴|\r\n|300|112|第一階段|我最尊敬的工作|01-個人成長與品德反思|\r\n|301|112|第一階段|如果我有任意門|11-想像、創意與角色扮演|\r\n|302|112|第一階段|如果我一位醫生|11-想像、創意與角色扮演|\r\n|303|112|第一階段|我最喜歡的一堂課|02-校園生活與學習點滴|\r\n|304|112|第一階段|二十年後的我|01-個人成長與品德反思|\r\n|305|112|第一階段|讓我感動的一則故事|09-藝文、閱讀與媒體探索|\r\n|306|112|第一階段|讓我感動的一則新聞|07-社會時事與現代科技|\r\n|307|112|第一階段|讓我感動的一本書|09-藝文、閱讀與媒體探索|\r\n|308|112|第一階段|難忘的生日禮物|04-敘事與難忘經驗|\r\n|309|112|第一階段|校園一角|02-校園生活與學習點滴|\r\n|310|112|第一階段|愈來愈熱的夏天|06-大自然與環境保護|\r\n|311|112|第一階段|我對網路世界的看法|07-社會時事與現代科技|\r\n|312|112|第一階段|如果我是自然老師|11-想像、創意與角色扮演|\r\n|313|112|第一階段|如果我是音樂老師|11-想像、創意與角色扮演|\r\n|314|112|第一階段|我最要好的同學|05-人際關係與社會互動|\r\n|315|112|第一階段|我最喜歡的老師|02-校園生活與學習點滴|\r\n|316|112|第一階段|如果我是臺北市市長|11-想像、創意與角色扮演|\r\n|317|112|第一階段|我想對市長說的一句話|11-想像、創意與角色扮演|\r\n|318|112|第一階段|珍惜我們的地球|01-個人成長與品德反思|\r\n|319|112|第一階段|家裡的我與學校的我|03-家庭親情與居家生活|\r\n|320|112|第一階段|微笑的力量|01-個人成長與品德反思|\r\n|321|112|第一階段|媽媽的拿手好菜|03-家庭親情與居家生活|\r\n|322|112|第一階段|印象最深的一件事|01-個人成長與品德反思|\r\n|323|112|第一階段|我最想擔任的班級幹部|02-校園生活與學習點滴|\r\n|324|112|第一階段|颱風前後|06-大自然與環境保護|\r\n|325|112|第一階段|我最喜愛的運動|08-興趣、休閒與日常生活|\r\n|326|112|第一階段|我最崇拜的歷史人物|01-個人成長與品德反思|\r\n|327|112|第一階段|我最近的煩惱|01-個人成長與品德反思|\r\n|328|112|第一階段|我最欣賞的運動員|01-個人成長與品德反思|\r\n|329|112|第一階段|一次做公益的經驗|01-個人成長與品德反思|\r\n|330|112|第一階段|當一個健康小尖兵|10-身心健康與生活體驗|\r\n|331|112|第一階段|當值值生的經驗|02-校園生活與學習點滴|\r\n|332|112|第一階段|我眼中的臺北市|12-鄉土、國際與多元角色|\r\n|333|112|第一階段|一次難忘的旅行|04-敘事與難忘經驗|\r\n|334|112|第一階段|如果學校沒有考試|02-校園生活與學習點滴|\r\n|335|112|第一階段|一次合作的經驗|05-人際關係與社會互動|\r\n|336|112|第二階段|我的白日夢|11-想像、創意與角色扮演|\r\n|337|112|第二階段|我的座右銘|01-個人成長與品德反思|\r\n|338|112|第二階段|心動不如馬上行動|01-個人成長與品德反思|\r\n|339|112|第二階段|我的未來不是夢|01-個人成長與品德反思|\r\n|340|112|第二階段|如果上下課的時間對調|02-校園生活與學習點滴|\r\n|341|112|第二階段|如果不用寫作業|02-校園生活與學習點滴|\r\n|342|112|第二階段|我長大了|01-個人成長與品德反思|\r\n|343|112|第二階段|勝不驕、敗不餒|01-個人成長與品德反思|\r\n|344|112|第二階段|走進大自然|06-大自然與環境保護|\r\n|345|112|第二階段|中秋節|04-敘事與難忘經驗|\r\n|346|112|第二階段|我獨處的時候|10-身心健康與生活體驗|\r\n|347|112|第二階段|做個小創客|01-個人成長與品德反思|\r\n|348|112|第二階段|打掃廁所的經驗|02-校園生活與學習點滴|\r\n|349|112|第二階段|讓我最頭痛的事|10-身心健康與生活體驗|\r\n|350|112|第二階段|我最期待的時光|01-個人成長與品德反思|\r\n|351|112|第二階段|合作的重要|05-人際關係與社會互動|\r\n|352|112|第二階段|圖書館|08-興趣、休閒與日常生活|\r\n|353|112|第二階段|學校的健康中心|02-校園生活與學習點滴|\r\n|354|112|第二階段|談談我自己|01-個人成長與品德反思|\r\n|355|112|第二階段|勤勞是幸福的種籽|01-個人成長與品德反思|\r\n|356|112|第二階段|合作是成功的祕訣|05-人際關係與社會互動|\r\n|357|112|第二階段|誠實是勇敢的表現|01-個人成長與品德反思|\r\n|358|112|第二階段|享受閱讀的好時光|09-藝文、閱讀與媒體探索|\r\n|359|112|第二階段|一則故事的啟示|09-藝文、閱讀與媒體探索|\r\n|360|112|第二階段|親情的力量|03-家庭親情與居家生活|\r\n|361|112|第二階段|笑容的力量|01-個人成長與品德反思|\r\n|362|112|第二階段|這一次，我終於做到了|01-個人成長與品德反思|\r\n|363|112|第二階段|校園表中最特別的風景|02-校園生活與學習點滴|\r\n|364|112|第二階段|學習的苦與樂|02-校園生活與學習點滴|\r\n|365|112|第二階段|我最得意的作品|01-個人成長與品德反思|\r\n|366|112|第二階段|長大後想做的事|01-個人成長與品德反思|\r\n|367|112|第二階段|用心做環保，生活才會好|06-大自然與環境保護|\r\n|368|112|第二階段|和大自然和諧共處|06-大自然與環境保護|\r\n|369|112|第二階段|一次特別的體驗|04-敘事與難忘經驗|\r\n|370|112|第二階段|地球想告訴我們的事|06-大自然與環境保護|\r\n|371|112|第二階段|幸福就在我身邊|01-個人成長與品德反思|\r\n|372|112|第二階段|為自己的健康把關|10-身心健康與生活體驗|\r\n|373|113|第一階段|一句我最喜歡的祝福|01-個人成長與品德反思|\r\n|374|113|第一階段|一次全新的體驗|04-敘事與難忘經驗|\r\n|375|113|第一階段|一位值得我學習的人|01-個人成長與品德反思|\r\n|376|113|第一階段|一雙溫暖的手|03-家庭親情與居家生活|\r\n|377|113|第一階段|我的下課時光|02-校園生活與學習點滴|\r\n|378|113|第一階段|大自然給我智慧|06-大自然與環境保護|\r\n|379|113|第一階段|打開閱讀的翅膀|09-藝文、閱讀與媒體探索|\r\n|380|113|第一階段|如何做一個受歡迎的人|01-個人成長與品德反思|\r\n|381|113|第一階段|如果我有魔法|11-想像、創意與角色扮演|\r\n|382|113|第一階段|如果我是發明家|11-想像、創意與角色扮演|\r\n|383|113|第一階段|如果讓我教一節課|02-校園生活與學習點滴|\r\n|384|113|第一階段|我心目中的台灣英雄|01-個人成長與品德反思|\r\n|385|113|第一階段|我心目中的英雄|01-個人成長與品德反思|\r\n|386|113|第一階段|我理想中的好學校|02-校園生活與學習點滴|\r\n|387|113|第一階段|我的生日願望|03-家庭親情與居家生活|\r\n|388|113|第一階段|我為何參加語文競賽|01-個人成長與品德反思|\r\n|389|113|第一階段|我常常思考的一件事|01-個人成長與品德反思|\r\n|390|113|第一階段|我最推薦的台北景點|12-鄉土、國際與多元角色|\r\n|391|113|第一階段|我最喜歡上的課|02-校園生活與學習點滴|\r\n|392|113|第一階段|我最喜歡的社團活動|08-興趣、休閒與日常生活|\r\n|393|113|第一階段|我最喜歡的校園一角|02-校園生活與學習點滴|\r\n|394|113|第一階段|我最喜歡的遊戲|08-興趣、休閒與日常生活|\r\n|395|113|第一階段|我最想拜訪的國家|12-鄉土、國際與多元角色|\r\n|396|113|第一階段|我最想學習的語言|12-鄉土、國際與多元角色|\r\n|397|113|第一階段|我最愛吃的一道菜|03-家庭親情與居家生活|\r\n|398|113|第一階段|我最愛逛的書店|12-鄉土、國際與多元角色|\r\n|399|113|第一階段|我想像中的圖書館|12-鄉土、國際與多元角色|\r\n|400|113|第一階段|我夢想中的未來世界|11-想像、創意與角色扮演|\r\n|401|113|第一階段|我對環保的堅持|06-大自然與環境保護|\r\n|402|113|第一階段|爸媽對我的期望|01-個人成長與品德反思|\r\n|403|113|第一階段|做個有品德的好學生|01-個人成長與品德反思|\r\n|404|113|第一階段|做環保，愛地球|06-大自然與環境保護|\r\n|405|113|第一階段|這次我勇敢嘗試了|01-個人成長與品德反思|\r\n|406|113|第一階段|最有意義的一件事|01-個人成長與品德反思|\r\n|407|113|第一階段|最幸福的時光|04-敘事與難忘經驗|\r\n|408|113|第一階段|最特別的一份回家作業|04-敘事與難忘經驗|\r\n|409|113|第一階段|暑假最特別的回記|04-敘事與難忘經驗|\r\n|410|113|第一階段|給父母一個擁抱|03-家庭親情與居家生活|\r\n|411|113|第一階段|想對老師說的真心話|02-校園生活與學習點滴|\r\n|412|113|第一階段|想對蔣市長說的真心話|11-想像、創意與角色扮演|\r\n|413|113|第一階段|當我難過的時候|01-個人成長與品德反思|\r\n|414|113|第一階段|運動的好處|08-興趣、休閒與日常生活|\r\n|415|113|第一階段|團隊合作的重要|05-人際關係與社會互動|\r\n|416|113|第一階段|學會照顧自己|01-個人成長與品德反思|\r\n|417|113|第一階段|親情的可貴|03-家庭親情與居家生活|\r\n|418|113|第一階段|難忘的交通教育宣宣導|04-敘事與難忘經驗|\r\n|419|113|第一階段|一次犯錯的經驗|01-個人成長與品德反思|\r\n|420|113|第一階段|一次難忘的課程|02-校園生活與學習點滴|\r\n|421|113|第一階段|地震來的時候|06-大自然與環境保護|\r\n|422|113|第一階段|如果我有超能力|11-想像、創意與角色扮演|\r\n|423|113|第一階段|如果我是總統|11-想像、創意與角色扮演|\r\n|424|113|第一階段|我如何運用零用錢|01-個人成長與品德反思|\r\n|425|113|第一階段|我的夢想|01-個人成長與品德反思|\r\n|426|113|第一階段|我看巴黎奧運|09-藝文、閱讀與媒體探索|\r\n|427|113|第一階段|我逛夜市的經驗|08-興趣、休閒與日常生活|\r\n|428|113|第一階段|我最喜歡的台灣傳統小吃|08-興趣、休閒與日常生活|\r\n|429|113|第一階段|我最喜歡的一項運動|08-興趣、休閒與日常生活|\r\n|430|113|第一階段|我最喜歡的美食|08-興趣、休閒與日常生活|\r\n|431|113|第一階段|我最喜歡的班級活動|02-校園生活與學習點滴|\r\n|432|113|第一階段|我看學校規定|02-校園生活與學習點滴|\r\n|433|113|第一階段|牙醫與我|10-身心健康與生活體驗|\r\n|434|113|第一階段|數位學習對我的幫助|07-社會時事與現代科技|\r\n|435|113|第一階段|翻轉上下課|02-校園生活與學習點滴|\r\n|436|113|第一階段|採購家庭用品的經驗|03-家庭親情與居家生活|\r\n|437|113|第一階段|書法課與我|02-校園生活與學習點滴|\r\n|438|113|第一階段|減塑行動|12-鄉土、國際與多元角色|\r\n|439|113|第一階段|難忘的海洋教育課程|04-敘事與難忘經驗|\r\n|440|113|第一階段|我看今年的巴黎奧運|09-藝文、閱讀與媒體探索|\r\n|441|113|第一階段|運動家的精神|01-個人成長與品德反思|\r\n|442|113|第一階段|颱風來臨時|06-大自然與環境保護|\r\n|443|113|第二階段|旅行帶給我的學習|12-鄉土、國際與多元角色|\r\n|444|113|第二階段|分享，是最大的快樂|05-人際關係與社會互動|\r\n|445|113|第二階段|巴黎奧運給我的啟示|09-藝文、閱讀與媒體探索|\r\n|446|113|第二階段|正向思考|01-個人成長與品德反思|\r\n|447|113|第二階段|自己動手樂趣多|08-興趣、休閒與日常生活|\r\n|448|113|第二階段|與同學合作的感動|05-人際關係與社會互動|\r\n|449|113|第二階段|我的暑假自主學習|04-敘事與難忘經驗|\r\n|450|113|第二階段|我最欣賞的一位藝術家|01-個人成長與品德反思|\r\n|451|113|第二階段|我最想分享的一本書|09-藝文、閱讀與媒體探索|\r\n|452|113|第二階段|天空，原來這麼大！|01-個人成長與品德反思|\r\n|453|113|第二階段|對導護志工的感謝|05-人際關係與社會互動|\r\n|454|113|第二階段|我最想成為的人|01-個人成長與品德反思|\r\n|455|113|第二階段|我對「取綽號」的看法|01-個人成長與品德反思|\r\n|456|113|第二階段|我對網網紅的看法|07-社會時事與現代科技|\r\n|457|113|第二階段|保持一顆學習的心|01-個人成長與品德反思|\r\n|458|113|第二階段|班上同學表決時|05-人際關係與社會互動|\r\n|459|113|第二階段|道歉的勇氣|01-個人成長與品德反思|\r\n|460|113|第二階段|看見圖書館的美|01-個人成長與品德反思|\r\n"
+    };
+
+    const state = {
+      categories: [],
+      topics: [],
+      visible: [],
+      keyword: "",
+      year: "all",
+      stage: "all",
+      category: "all"
+    };
+
+    const LOGIN_PASSWORD = "0000";
+    const AUTH_KEY = "speechTalkUnlocked";
+
+    const els = {
+      loginForm: document.querySelector("#loginForm"),
+      loginPassword: document.querySelector("#loginPassword"),
+      loginError: document.querySelector("#loginError"),
+      logoutButton: document.querySelector("#logoutButton"),
+      keyword: document.querySelector("#keyword"),
+      searchButton: document.querySelector("#searchButton"),
+      yearFilter: document.querySelector("#yearFilter"),
+      stageFilter: document.querySelector("#stageFilter"),
+      categoryFilter: document.querySelector("#categoryFilter"),
+      categoryPanel: document.querySelector(".category-panel"),
+      categoryToggle: document.querySelector("#categoryToggle"),
+      resetButton: document.querySelector("#resetButton"),
+      randomButton: document.querySelector("#randomButton"),
+      categoryList: document.querySelector("#categoryList"),
+      results: document.querySelector("#results"),
+      totalTopics: document.querySelector("#totalTopics"),
+      visibleTopics: document.querySelector("#visibleTopics"),
+      yearCount: document.querySelector("#yearCount"),
+      categoryCount: document.querySelector("#categoryCount"),
+      categorySummary: document.querySelector("#categorySummary"),
+      resultsTitle: document.querySelector(".results-head h2"),
+      resultSummary: document.querySelector("#resultSummary")
+    };
+
+    function readAuthState() {
+      try {
+        return sessionStorage.getItem(AUTH_KEY) === "true";
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function writeAuthState(value) {
+      try {
+        if (value) {
+          sessionStorage.setItem(AUTH_KEY, "true");
+        } else {
+          sessionStorage.removeItem(AUTH_KEY);
+        }
+      } catch (error) {
+        // The page still works if browser storage is unavailable.
+      }
+    }
+
+    function unlockApp() {
+      document.body.classList.remove("login-locked");
+      els.loginError.textContent = "";
+      els.loginPassword.value = "";
+    }
+
+    function lockApp() {
+      document.body.classList.add("login-locked");
+      els.loginPassword.value = "";
+      setTimeout(() => els.loginPassword.focus(), 0);
+    }
+
+    function setupLogin() {
+      if (readAuthState()) {
+        unlockApp();
+      } else {
+        lockApp();
+      }
+
+      els.loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (els.loginPassword.value === LOGIN_PASSWORD) {
+          writeAuthState(true);
+          unlockApp();
+          return;
+        }
+        els.loginError.textContent = "密碼不正確，請再試一次。";
+        els.loginPassword.select();
+      });
+
+      els.logoutButton.addEventListener("click", () => {
+        writeAuthState(false);
+        lockApp();
+      });
+    }
+
+    function parseMarkdownTable(markdown) {
+      const rows = markdown
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter((line) => line.startsWith("|") && line.endsWith("|"))
+        .map((line) => line.slice(1, -1).split("|").map((cell) => cell.trim()));
+
+      if (rows.length < 2) {
+        return [];
+      }
+
+      const headers = rows[0];
+      return rows.slice(2).map((row) => {
+        return headers.reduce((record, header, index) => {
+          record[header] = row[index] || "";
+          return record;
+        }, {});
+      });
+    }
+
+
+    function topicCountByCategory(categoryName) {
+      return state.topics.filter((topic) => topic.category === categoryName).length;
+    }
+
+    function uniqueValues(key) {
+      return [...new Set(state.topics.map((topic) => topic[key]).filter(Boolean))].sort();
+    }
+
+    function setOptions(select, values, allLabel) {
+      select.innerHTML = "";
+      select.append(new Option(allLabel, "all"));
+      values.forEach((value) => select.append(new Option(value, value)));
+    }
+
+    function categoryClass(categoryName) {
+      const match = String(categoryName).match(/^(\d{2})-/);
+      return match ? `cat-${match[1]}` : "cat-01";
+    }
+
+    function hydrateControls() {
+      setOptions(els.yearFilter, uniqueValues("year"), "全部年度");
+      setOptions(els.stageFilter, uniqueValues("stage"), "全部階段");
+      setOptions(els.categoryFilter, state.categories.map((category) => category.name), "全部分類");
+    }
+
+    function renderStats() {
+      els.totalTopics.textContent = state.topics.length;
+      els.visibleTopics.textContent = state.visible.length;
+      els.yearCount.textContent = uniqueValues("year").length;
+      els.categoryCount.textContent = state.categories.length;
+      els.categorySummary.textContent = `${state.categories.length} 類`;
+      els.resultsTitle.textContent = `符合條件的題目`;
+      els.resultSummary.textContent = `${state.visible.length} 題`;
+    }
+
+    function renderCategories() {
+      const allClass = state.category === "all" ? " active" : "";
+      const allButton = `
+        <button class="category-button cat-01${allClass}" type="button" data-category="all">
+          <span class="category-name">全部分類</span>
+          <span class="category-meta">${state.topics.length} 題</span>
+        </button>
+      `;
+
+      const categoryButtons = state.categories.map((category) => {
+        const active = state.category === category.name ? " active" : "";
+        const count = topicCountByCategory(category.name);
+        return `
+          <button class="category-button ${categoryClass(category.name)}${active}" type="button" data-category="${escapeHtml(category.name)}" title="${escapeHtml(category.description)}">
+            <span class="category-name">${escapeHtml(category.name)}</span>
+            <span class="category-meta">${count} 題</span>
+          </button>
+        `;
+      }).join("");
+
+      els.categoryList.innerHTML = allButton + categoryButtons;
+    }
+
+    function topicMatches(topic) {
+      const keyword = state.keyword.trim().toLowerCase();
+      const haystack = `${topic.year} ${topic.stage} ${topic.title} ${topic.category}`.toLowerCase();
+      const keywordMatch = keyword === "" || haystack.includes(keyword);
+      const yearMatch = state.year === "all" || topic.year === state.year;
+      const stageMatch = state.stage === "all" || topic.stage === state.stage;
+      const categoryMatch = state.category === "all" || topic.category === state.category;
+      return keywordMatch && yearMatch && stageMatch && categoryMatch;
+    }
+
+    function renderResults() {
+      if (state.visible.length === 0) {
+        els.results.innerHTML = '<div class="empty">找不到符合條件的題目。可以試著放寬年度、階段或關鍵字。</div>';
+        return;
+      }
+
+      els.results.innerHTML = state.visible.map((topic) => `
+        <article class="topic-card ${categoryClass(topic.category)}">
+          <h3 class="topic-title">${escapeHtml(topic.title)}</h3>
+          <div class="topic-meta">
+            <span class="tag year">${escapeHtml(topic.year)} 年</span>
+            <span class="tag stage">${escapeHtml(topic.stage)}</span>
+            <span class="tag category">${escapeHtml(topic.category)}</span>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function applyFilters() {
+      state.keyword = els.keyword.value;
+      state.year = els.yearFilter.value;
+      state.stage = els.stageFilter.value;
+      state.category = els.categoryFilter.value;
+      state.visible = state.topics.filter(topicMatches);
+      renderStats();
+      renderCategories();
+      renderResults();
+    }
+
+    function resetFilters() {
+      els.keyword.value = "";
+      els.yearFilter.value = "all";
+      els.stageFilter.value = "all";
+      els.categoryFilter.value = "all";
+      applyFilters();
+    }
+
+    function pickRandomTopic() {
+      const pool = state.visible.length > 0 ? state.visible : state.topics;
+      if (pool.length === 0) {
+        return;
+      }
+
+      const picked = pool[Math.floor(Math.random() * pool.length)];
+      els.keyword.value = picked.title;
+      els.yearFilter.value = "all";
+      els.stageFilter.value = "all";
+      els.categoryFilter.value = "all";
+      applyFilters();
+      document.querySelector(".results-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function attachEvents() {
+      [els.keyword, els.yearFilter, els.stageFilter, els.categoryFilter].forEach((control) => {
+        control.addEventListener("input", applyFilters);
+      });
+
+      els.searchButton.addEventListener("click", applyFilters);
+      els.resetButton.addEventListener("click", resetFilters);
+      els.randomButton.addEventListener("click", pickRandomTopic);
+      els.categoryToggle.addEventListener("click", () => {
+        const isOpen = els.categoryPanel.classList.toggle("open");
+        els.categoryToggle.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      els.categoryList.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-category]");
+        if (!button) {
+          return;
+        }
+        els.categoryFilter.value = button.dataset.category;
+        applyFilters();
+        if (window.matchMedia("(max-width: 560px)").matches) {
+          els.categoryPanel.classList.remove("open");
+          els.categoryToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    async function init() {
+      setupLogin();
+
+      try {
+        const categoryMarkdown = embeddedMarkdown.categories;
+        const topicMarkdown = embeddedMarkdown.topics;
+
+        state.categories = parseMarkdownTable(categoryMarkdown).map((row) => ({
+          id: row["項次"],
+          name: row["分類名稱"],
+          description: row["分類內容"]
+        }));
+
+        state.topics = parseMarkdownTable(topicMarkdown).map((row) => ({
+          id: row["項次"],
+          year: row["年度"],
+          stage: row["階段"],
+          title: row["演講題目"],
+          category: row["主題分類"]
+        }));
+
+        hydrateControls();
+        attachEvents();
+        applyFilters();
+      } catch (error) {
+        els.resultSummary.textContent = "讀取失敗";
+        els.results.innerHTML = `
+          <div class="error">內嵌資料解析失敗，請確認 Markdown 表格格式。</div>
+        `;
+        console.error(error);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
