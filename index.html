@@ -613,12 +613,31 @@
       }
 
       .hero {
-        gap: 12px;
-        margin-bottom: 10px;
+        align-items: center;
+        background: transparent;
+        flex-direction: row;
+        gap: 8px;
+        justify-content: space-between;
+        margin-bottom: 8px;
       }
 
+      .hero-copy {
+        min-width: 0;
+      }
+
+      .hero-copy h1,
       .hero-copy p {
-        font-size: 14px;
+        display: none;
+      }
+
+      .hero .version-badge {
+        margin-top: 0;
+      }
+
+      .hero-tools {
+        flex: 0 0 auto;
+        justify-items: end;
+        width: auto;
       }
 
       .stats {
@@ -641,7 +660,7 @@
       }
 
       main {
-        padding: 12px 10px 28px;
+        padding: 8px 10px 28px;
       }
 
       .controls {
@@ -703,10 +722,6 @@
       select,
       button {
         min-height: 46px;
-      }
-
-      .hero-copy h1 {
-        font-size: 23px;
       }
 
       .category-head,
