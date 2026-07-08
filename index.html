@@ -204,7 +204,7 @@
       box-shadow: var(--shadow);
       display: grid;
       gap: 12px;
-      grid-template-columns: minmax(280px, 1.4fr) repeat(4, minmax(128px, 0.65fr));
+      grid-template-columns: minmax(0, 1fr) auto;
       margin-bottom: 14px;
       padding: 16px;
       position: sticky;
@@ -213,7 +213,18 @@
     }
 
     .advanced-filters {
-      display: contents;
+      display: grid;
+      gap: 12px;
+      grid-column: 1;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+
+    .filter-primary-row {
+      align-items: end;
+      display: grid;
+      gap: 12px;
+      grid-column: 1 / -1;
+      grid-template-columns: minmax(0, 1fr) auto;
     }
 
     .field {
@@ -224,13 +235,35 @@
     }
 
     .keyword-field {
-      grid-column: span 2;
+      min-width: 0;
     }
 
     .filter-hint {
       color: var(--muted);
       font-size: 12px;
       font-weight: 600;
+    }
+
+    .quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .quick-tag {
+      background: rgba(47, 118, 95, 0.09);
+      border: 1px solid rgba(47, 118, 95, 0.18);
+      border-radius: 999px;
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 800;
+      min-height: 0;
+      padding: 5px 9px;
+    }
+
+    .quick-tag:hover {
+      background: var(--brand-soft);
     }
 
     .subcategory-field.is-hidden {
@@ -265,7 +298,7 @@
       align-items: center;
       display: flex;
       gap: 8px;
-      grid-column: 1 / -1;
+      grid-column: 2;
       justify-content: flex-end;
       white-space: nowrap;
     }
@@ -300,7 +333,7 @@
     #randomButton {
       background: var(--accent);
       box-shadow: 0 10px 20px rgba(217, 130, 59, 0.22);
-      min-width: 146px;
+      min-width: 160px;
     }
 
     #randomButton:hover {
@@ -598,6 +631,11 @@
       margin-bottom: 4px;
     }
 
+    .tip-box button {
+      margin-top: 8px;
+      min-height: 38px;
+    }
+
     @media (max-width: 920px) {
       .layout,
       .controls {
@@ -724,8 +762,13 @@
         z-index: 8;
       }
 
-      .controls .field:first-child {
+      .filter-primary-row {
         grid-column: 1 / -1;
+        grid-template-columns: 1fr;
+      }
+
+      #randomButton {
+        width: 100%;
       }
 
       .advanced-filters {
@@ -751,7 +794,7 @@
 
       .actions {
         display: grid;
-        grid-column: 2;
+        grid-column: 1 / -1;
         grid-template-columns: 1fr;
       }
 
@@ -762,7 +805,7 @@
 
       .controls.filters-open .actions {
         grid-column: 1 / -1;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
       }
 
       .controls.filters-open .actions #resetButton {
@@ -863,21 +906,23 @@
     </section>
 
     <section class="controls" aria-label="查詢條件">
-      <div class="field keyword-field">
-        <label for="keyword">關鍵字搜尋</label>
-        <input id="keyword" type="search" placeholder="輸入題目、分類或年度，例如：環保、夢想、113">
-        <span class="filter-hint">輸入或變更條件後，題目會即時更新。</span>
+      <div class="filter-primary-row">
+        <div class="field keyword-field">
+          <label for="keyword">關鍵字搜尋</label>
+          <input id="keyword" type="search" placeholder="輸入題目、分類或關鍵字，例如：環保、夢想、閱讀">
+          <span class="filter-hint">輸入或變更條件後，題目會即時更新。</span>
+          <div class="quick-tags" aria-label="常用關鍵字">
+            <button class="quick-tag" type="button" data-keyword="夢想">夢想</button>
+            <button class="quick-tag" type="button" data-keyword="環保">環保</button>
+            <button class="quick-tag" type="button" data-keyword="閱讀">閱讀</button>
+            <button class="quick-tag" type="button" data-keyword="朋友">朋友</button>
+            <button class="quick-tag" type="button" data-keyword="上台">上台</button>
+          </div>
+        </div>
+        <button class="primary" id="randomButton" type="button">隨機抽題</button>
       </div>
       <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="advancedFilters">篩選條件</button>
       <div class="advanced-filters" id="advancedFilters">
-        <div class="field">
-          <label for="yearFilter">年度</label>
-          <select id="yearFilter"></select>
-        </div>
-        <div class="field">
-          <label for="stageFilter">階段</label>
-          <select id="stageFilter"></select>
-        </div>
         <div class="field">
           <label for="categoryFilter">主題分類</label>
           <select id="categoryFilter"></select>
@@ -889,7 +934,6 @@
       </div>
       <div class="actions">
         <button class="primary" id="searchButton" type="button">開始篩選</button>
-        <button class="primary" id="randomButton" type="button">隨機抽題</button>
         <button class="ghost" id="resetButton" type="button">清除條件</button>
       </div>
     </section>
@@ -1392,15 +1436,13 @@
       topics: [],
       visible: [],
       keyword: "",
-      year: "all",
-      stage: "all",
       category: "all",
       subcategory: "all"
     };
 
     const LOGIN_PASSWORD = "0000";
     const AUTH_KEY = "speechTalkUnlocked";
-    const APP_VERSION = "v1.6.0";
+    const APP_VERSION = "v1.8.0";
 
     const els = {
       loginForm: document.querySelector("#loginForm"),
@@ -1411,8 +1453,6 @@
       controls: document.querySelector(".controls"),
       filterToggle: document.querySelector("#filterToggle"),
       searchButton: document.querySelector("#searchButton"),
-      yearFilter: document.querySelector("#yearFilter"),
-      stageFilter: document.querySelector("#stageFilter"),
       categoryFilter: document.querySelector("#categoryFilter"),
       subcategoryField: document.querySelector("#subcategoryField"),
       subcategoryFilter: document.querySelector("#subcategoryFilter"),
@@ -1420,6 +1460,7 @@
       categoryToggle: document.querySelector("#categoryToggle"),
       resetButton: document.querySelector("#resetButton"),
       randomButton: document.querySelector("#randomButton"),
+      quickTags: document.querySelector(".quick-tags"),
       categoryList: document.querySelector("#categoryList"),
       results: document.querySelector("#results"),
       totalTopics: document.querySelector("#totalTopics"),
@@ -1602,8 +1643,6 @@
     }
 
     function hydrateControls() {
-      setOptions(els.yearFilter, uniqueValues("year"), "全部年度");
-      setOptions(els.stageFilter, uniqueValues("stage"), "全部階段");
       setOptions(els.categoryFilter, state.categories.map((category) => category.name), "全部分類");
       updateSubcategoryOptions("all");
     }
@@ -1646,16 +1685,23 @@
       const keyword = state.keyword.trim().toLowerCase();
       const haystack = `${topic.year} ${topic.stage} ${topic.title} ${topic.category} ${topic.subcategoryCode} ${topic.subcategory} ${topic.mainSubcategory}`.toLowerCase();
       const keywordMatch = keyword === "" || haystack.includes(keyword);
-      const yearMatch = state.year === "all" || topic.year === state.year;
-      const stageMatch = state.stage === "all" || topic.stage === state.stage;
       const categoryMatch = state.category === "all" || topic.category === state.category;
       const subcategoryMatch = state.subcategory === "all" || topic.subcategoryCode === state.subcategory;
-      return keywordMatch && yearMatch && stageMatch && categoryMatch && subcategoryMatch;
+      return keywordMatch && categoryMatch && subcategoryMatch;
     }
 
     function renderResults() {
       if (state.visible.length === 0) {
-        els.results.innerHTML = '<div class="empty">找不到符合條件的題目。可以試著放寬年度、階段或關鍵字。</div>';
+        els.results.innerHTML = `
+          <div class="empty">
+            找不到符合條件的題目。可以試著改用其他關鍵字、主題分類，或清除篩選重新開始。
+            <div class="tip-box">
+              <strong>快速建議</strong>
+              <button class="ghost" id="emptyResetButton" type="button">清除篩選</button>
+            </div>
+          </div>
+        `;
+        document.querySelector("#emptyResetButton")?.addEventListener("click", resetFilters);
         return;
       }
 
@@ -1674,8 +1720,6 @@
 
     function applyFilters() {
       state.keyword = els.keyword.value;
-      state.year = els.yearFilter.value;
-      state.stage = els.stageFilter.value;
       state.category = els.categoryFilter.value;
       updateSubcategoryOptions(els.subcategoryFilter.value);
       state.subcategory = els.subcategoryFilter.value;
@@ -1687,8 +1731,6 @@
 
     function resetFilters() {
       els.keyword.value = "";
-      els.yearFilter.value = "all";
-      els.stageFilter.value = "all";
       els.categoryFilter.value = "all";
       els.subcategoryFilter.value = "all";
       applyFilters();
@@ -1705,8 +1747,6 @@
 
       const picked = pool[Math.floor(Math.random() * pool.length)];
       els.keyword.value = picked.title;
-      els.yearFilter.value = "all";
-      els.stageFilter.value = "all";
       els.categoryFilter.value = "all";
       els.subcategoryFilter.value = "all";
       applyFilters();
@@ -1723,7 +1763,7 @@
     }
 
     function attachEvents() {
-      [els.keyword, els.yearFilter, els.stageFilter, els.categoryFilter, els.subcategoryFilter].forEach((control) => {
+      [els.keyword, els.categoryFilter, els.subcategoryFilter].forEach((control) => {
         control.addEventListener("input", applyFilters);
       });
 
@@ -1738,6 +1778,14 @@
       });
       els.resetButton.addEventListener("click", resetFilters);
       els.randomButton.addEventListener("click", pickRandomTopic);
+      els.quickTags.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-keyword]");
+        if (!button) {
+          return;
+        }
+        els.keyword.value = button.dataset.keyword;
+        applyFilters();
+      });
       els.categoryToggle.addEventListener("click", () => {
         const isOpen = els.categoryPanel.classList.toggle("open");
         els.categoryToggle.setAttribute("aria-expanded", String(isOpen));
