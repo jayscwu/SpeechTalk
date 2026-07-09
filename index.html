@@ -166,35 +166,6 @@
       justify-items: end;
     }
 
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-end;
-      min-width: 310px;
-    }
-
-    .stat {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      box-shadow: none;
-      min-width: 132px;
-      padding: 7px 12px;
-    }
-
-    .stat strong {
-      display: inline;
-      font-size: 18px;
-      line-height: 1;
-      margin-right: 4px;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
     .controls {
       background:
         linear-gradient(135deg, rgba(47, 118, 95, 0.08), rgba(255, 253, 248, 0.98) 45%),
@@ -204,7 +175,6 @@
       box-shadow: var(--shadow);
       display: grid;
       gap: 12px;
-      grid-template-columns: minmax(0, 1fr) auto;
       margin-bottom: 14px;
       padding: 16px;
       position: sticky;
@@ -212,10 +182,43 @@
       z-index: 8;
     }
 
+    .controls-head {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .controls-title {
+      display: grid;
+      gap: 2px;
+    }
+
+    .controls-title strong {
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .controls-title span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .filter-body {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .controls.filters-collapsed .filter-body {
+      display: none;
+    }
+
     .advanced-filters {
       display: grid;
       gap: 12px;
-      grid-column: 1;
+      grid-column: 1 / -1;
       grid-template-columns: repeat(2, minmax(180px, 1fr));
     }
 
@@ -224,7 +227,7 @@
       display: grid;
       gap: 12px;
       grid-column: 1 / -1;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .field {
@@ -242,28 +245,6 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 600;
-    }
-
-    .quick-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 2px;
-    }
-
-    .quick-tag {
-      background: rgba(47, 118, 95, 0.09);
-      border: 1px solid rgba(47, 118, 95, 0.18);
-      border-radius: 999px;
-      color: var(--brand-dark);
-      font-size: 12px;
-      font-weight: 800;
-      min-height: 0;
-      padding: 5px 9px;
-    }
-
-    .quick-tag:hover {
-      background: var(--brand-soft);
     }
 
     .subcategory-field.is-hidden {
@@ -298,13 +279,27 @@
       align-items: center;
       display: flex;
       gap: 8px;
-      grid-column: 2;
+      grid-column: 1 / -1;
       justify-content: flex-end;
       white-space: nowrap;
     }
 
     .filter-toggle {
-      display: none;
+      align-items: center;
+      background: transparent;
+      border: 0;
+      color: var(--brand-dark);
+      display: inline-flex;
+      justify-content: center;
+      min-height: 32px;
+      min-width: 0;
+      padding: 4px 2px;
+    }
+
+    .filter-toggle:hover {
+      color: var(--brand);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     button {
@@ -358,7 +353,7 @@
     .layout {
       display: grid;
       gap: 14px;
-      grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
     }
 
@@ -372,8 +367,6 @@
 
     .category-panel {
       overflow: hidden;
-      position: sticky;
-      top: 96px;
     }
 
     .category-panel h2,
@@ -408,9 +401,14 @@
     }
 
     .category-list {
-      display: grid;
+      display: flex;
       gap: 8px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
       padding: 10px;
+      scrollbar-width: thin;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
     }
 
     .category-button {
@@ -424,9 +422,11 @@
       justify-items: start;
       min-height: 0;
       padding: 10px 12px;
+      scroll-snap-align: start;
       text-align: left;
       transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
-      width: 100%;
+      width: clamp(190px, 23vw, 260px);
+      flex: 0 0 auto;
     }
 
     .category-button:hover {
@@ -540,8 +540,8 @@
     }
 
     .tag.subcategory {
-      background: #fff5e8;
-      color: #9a5b1f;
+      background: var(--cat-soft);
+      color: var(--cat-color);
     }
 
     .cat-01 {
@@ -638,7 +638,7 @@
 
     @media (max-width: 920px) {
       .layout,
-      .controls {
+      .filter-body {
         grid-template-columns: 1fr;
       }
 
@@ -662,20 +662,6 @@
 
       .logout-button {
         justify-self: end;
-      }
-
-      .stats {
-        justify-content: flex-start;
-        min-width: 0;
-        width: 100%;
-      }
-
-      .stat {
-        flex: 1 1 140px;
-      }
-
-      .category-panel {
-        position: static;
       }
 
       .actions {
@@ -730,23 +716,10 @@
         width: auto;
       }
 
-      .stats {
-        display: none;
-      }
-
       .logout-button {
         min-height: 34px;
         padding: 6px 10px;
         width: auto;
-      }
-
-      .stat {
-        min-width: 0;
-        padding: 7px 9px;
-      }
-
-      .stat strong {
-        font-size: 17px;
       }
 
       main {
@@ -755,11 +728,26 @@
 
       .controls {
         gap: 10px;
-        grid-template-columns: 1fr 1fr;
         padding: 12px;
         position: sticky;
         top: 0;
         z-index: 8;
+      }
+
+      .controls-head {
+        gap: 10px;
+      }
+
+      .controls-title strong {
+        font-size: 15px;
+      }
+
+      .controls-title span {
+        display: none;
+      }
+
+      .filter-body {
+        grid-template-columns: 1fr;
       }
 
       .filter-primary-row {
@@ -772,44 +760,22 @@
       }
 
       .advanced-filters {
-        display: none;
         gap: 10px;
         grid-column: 1 / -1;
         grid-template-columns: 1fr;
       }
 
-      .controls.filters-open .advanced-filters {
-        display: grid;
-      }
-
       .filter-toggle {
-        align-items: center;
-        background: #ffffff;
-        border: 1px solid var(--line);
-        color: var(--brand-dark);
-        display: inline-flex;
-        justify-content: center;
-        width: 100%;
+        justify-self: end;
+        min-height: 32px;
+        padding: 4px 2px;
+        width: auto;
       }
 
       .actions {
         display: grid;
         grid-column: 1 / -1;
         grid-template-columns: 1fr;
-      }
-
-      .actions #searchButton,
-      .actions #resetButton {
-        display: none;
-      }
-
-      .controls.filters-open .actions {
-        grid-column: 1 / -1;
-        grid-template-columns: 1fr;
-      }
-
-      .controls.filters-open .actions #resetButton {
-        display: inline-flex;
       }
 
       input,
@@ -823,18 +789,12 @@
         padding: 12px;
       }
 
-      .category-head {
-        cursor: pointer;
-      }
-
       .category-list {
-        display: none;
-        grid-template-columns: 1fr;
         padding: 10px 12px 12px;
       }
 
-      .category-panel.open .category-list {
-        display: grid;
+      .category-button {
+        width: min(78vw, 280px);
       }
 
       .topic-card {
@@ -884,68 +844,51 @@
       </div>
       <div class="hero-tools">
         <button class="logout-button" id="logoutButton" type="button">登出</button>
-        <div class="stats" aria-label="資料統計">
-          <div class="stat">
-            <strong id="totalTopics">0</strong>
-            <span>題演講題目</span>
-          </div>
-          <div class="stat">
-            <strong id="visibleTopics">0</strong>
-            <span>目前符合條件</span>
-          </div>
-          <div class="stat">
-            <strong id="yearCount">0</strong>
-            <span>個年度</span>
-          </div>
-          <div class="stat">
-            <strong id="categoryCount">0</strong>
-            <span>個主題分類</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="controls" aria-label="查詢條件">
-      <div class="filter-primary-row">
-        <div class="field keyword-field">
-          <label for="keyword">關鍵字搜尋</label>
-          <input id="keyword" type="search" placeholder="輸入題目、分類或關鍵字，例如：環保、夢想、閱讀">
-          <span class="filter-hint">輸入或變更條件後，題目會即時更新。</span>
-          <div class="quick-tags" aria-label="常用關鍵字">
-            <button class="quick-tag" type="button" data-keyword="夢想">夢想</button>
-            <button class="quick-tag" type="button" data-keyword="環保">環保</button>
-            <button class="quick-tag" type="button" data-keyword="閱讀">閱讀</button>
-            <button class="quick-tag" type="button" data-keyword="朋友">朋友</button>
-            <button class="quick-tag" type="button" data-keyword="上台">上台</button>
-          </div>
-        </div>
-        <button class="primary" id="randomButton" type="button">隨機抽題</button>
-      </div>
-      <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="advancedFilters">篩選條件</button>
-      <div class="advanced-filters" id="advancedFilters">
-        <div class="field">
-          <label for="categoryFilter">主題分類</label>
-          <select id="categoryFilter"></select>
-        </div>
-        <div class="field subcategory-field is-hidden" id="subcategoryField">
-          <label for="subcategoryFilter">次分類</label>
-          <select id="subcategoryFilter"></select>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="primary" id="searchButton" type="button">開始篩選</button>
-        <button class="ghost" id="resetButton" type="button">清除條件</button>
       </div>
     </section>
 
     <section class="layout">
       <aside class="category-panel" aria-label="主題分類列表">
-        <button class="category-head" id="categoryToggle" type="button" aria-expanded="false" aria-controls="categoryList">
+        <div class="category-head">
           <h2>主題分類</h2>
           <span class="count-pill" id="categorySummary">0 類</span>
-        </button>
+        </div>
         <div class="category-list" id="categoryList"></div>
       </aside>
+
+      <section class="controls filters-collapsed" aria-label="查詢條件">
+        <div class="controls-head">
+          <div class="controls-title">
+            <strong>查詢與抽題</strong>
+            <span>可用關鍵字、主分類與次分類即時縮小題目範圍</span>
+          </div>
+          <button class="filter-toggle" id="filterToggle" type="button" aria-expanded="false" aria-controls="filterBody">展開查詢</button>
+        </div>
+        <div class="filter-body" id="filterBody">
+          <div class="advanced-filters" id="advancedFilters">
+            <div class="field">
+              <label for="categoryFilter">主題分類</label>
+              <select id="categoryFilter"></select>
+            </div>
+            <div class="field subcategory-field is-hidden" id="subcategoryField">
+              <label for="subcategoryFilter">次分類</label>
+              <select id="subcategoryFilter"></select>
+            </div>
+          </div>
+          <div class="filter-primary-row">
+            <div class="field keyword-field">
+              <label for="keyword">關鍵字搜尋</label>
+              <input id="keyword" type="search" placeholder="輸入題目、分類或年度，例如：環保、夢想、113">
+              <span class="filter-hint">輸入或變更條件後，題目會即時更新。</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="primary" id="searchButton" type="button">開始篩選</button>
+            <button class="primary" id="randomButton" type="button">隨機抽題</button>
+            <button class="ghost" id="resetButton" type="button">清除條件</button>
+          </div>
+        </div>
+      </section>
 
       <section class="results-panel" aria-live="polite">
         <div class="results-head">
@@ -1442,7 +1385,7 @@
 
     const LOGIN_PASSWORD = "0000";
     const AUTH_KEY = "speechTalkUnlocked";
-    const APP_VERSION = "v1.8.0";
+    const APP_VERSION = "v1.11.0";
 
     const els = {
       loginForm: document.querySelector("#loginForm"),
@@ -1457,16 +1400,10 @@
       subcategoryField: document.querySelector("#subcategoryField"),
       subcategoryFilter: document.querySelector("#subcategoryFilter"),
       categoryPanel: document.querySelector(".category-panel"),
-      categoryToggle: document.querySelector("#categoryToggle"),
       resetButton: document.querySelector("#resetButton"),
       randomButton: document.querySelector("#randomButton"),
-      quickTags: document.querySelector(".quick-tags"),
       categoryList: document.querySelector("#categoryList"),
       results: document.querySelector("#results"),
-      totalTopics: document.querySelector("#totalTopics"),
-      visibleTopics: document.querySelector("#visibleTopics"),
-      yearCount: document.querySelector("#yearCount"),
-      categoryCount: document.querySelector("#categoryCount"),
       categorySummary: document.querySelector("#categorySummary"),
       resultsTitle: document.querySelector(".results-head h2"),
       resultSummary: document.querySelector("#resultSummary")
@@ -1516,9 +1453,9 @@
     }
 
     function setFilterPanel(open) {
-      els.controls.classList.toggle("filters-open", open);
+      els.controls.classList.toggle("filters-collapsed", !open);
       els.filterToggle.setAttribute("aria-expanded", String(open));
-      els.filterToggle.textContent = open ? "收合篩選" : "篩選條件";
+      els.filterToggle.textContent = open ? "收合查詢" : "展開查詢";
     }
 
     function setupLogin() {
@@ -1648,10 +1585,6 @@
     }
 
     function renderStats() {
-      els.totalTopics.textContent = state.topics.length;
-      els.visibleTopics.textContent = state.visible.length;
-      els.yearCount.textContent = uniqueValues("year").length;
-      els.categoryCount.textContent = state.categories.length;
       els.categorySummary.textContent = `${state.categories.length} 類`;
       els.resultsTitle.textContent = `符合條件的題目`;
       els.resultSummary.textContent = `共 ${state.visible.length} 題`;
@@ -1774,23 +1707,10 @@
         }
       });
       els.filterToggle.addEventListener("click", () => {
-        setFilterPanel(!els.controls.classList.contains("filters-open"));
+        setFilterPanel(els.controls.classList.contains("filters-collapsed"));
       });
       els.resetButton.addEventListener("click", resetFilters);
       els.randomButton.addEventListener("click", pickRandomTopic);
-      els.quickTags.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-keyword]");
-        if (!button) {
-          return;
-        }
-        els.keyword.value = button.dataset.keyword;
-        applyFilters();
-      });
-      els.categoryToggle.addEventListener("click", () => {
-        const isOpen = els.categoryPanel.classList.toggle("open");
-        els.categoryToggle.setAttribute("aria-expanded", String(isOpen));
-      });
-
       els.categoryList.addEventListener("click", (event) => {
         const button = event.target.closest("[data-category]");
         if (!button) {
@@ -1800,8 +1720,6 @@
         els.subcategoryFilter.value = "all";
         applyFilters();
         if (isMobileViewport()) {
-          els.categoryPanel.classList.remove("open");
-          els.categoryToggle.setAttribute("aria-expanded", "false");
           setFilterPanel(false);
         }
       });
